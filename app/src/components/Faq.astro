@@ -1,0 +1,74 @@
+---
+import { TRIBUTE_URL } from "../config";
+---
+
+    <section class="faq" id="faq" aria-label="Вопросы и ответы">
+      <div class="wrap">
+        <div class="faq-head reveal">
+          <h2>Вопросы и ответы</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">01</span>
+              <span class="faq-q-text">Я знаю только один язык. Подойдёт?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Да. Принципы production-разработки и AI-first подходы не привязаны к языку: примеры в основном на TypeScript, но всё переносится на Go, C#, Java и любой другой стек.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">02</span>
+              <span class="faq-q-text">Это курс с чёткой программой?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Нет, это живой канал. Материалы выходят постоянно и следуют за реальной работой: сегодня архитектура сервиса, завтра разбор пайплайна с агентами. Ты выбираешь темы, которые нужны именно тебе.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">03</span>
+              <span class="faq-q-text">Сколько времени нужно уделять?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Столько, сколько хочешь. Материалы короткие и практичные: их можно смотреть в своём темпе, а вопросы задавать в чате.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">04</span>
+              <span class="faq-q-text">Будут ли ответы на мои вопросы?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Да. Прямая связь со мной, разборы решений и прямые трансляции: любой вопрос по теме можно задать лично.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">05</span>
+              <span class="faq-q-text">Что, если мне не зайдёт?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Подписка отменяется в любой момент, без обязательств и скрытых условий.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="sec-cta reveal"><a href={TRIBUTE_URL} target="_blank" rel="noopener">Получить доступ</a></p>
+      </div>
+    </section>

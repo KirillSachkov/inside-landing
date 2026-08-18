@@ -1,0 +1,28 @@
+---
+import { TRIBUTE_URL } from "../config";
+---
+
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <h1 class="hero-title"><span class="h1-line">От разработчика</span><span class="h1-line">к <span class="glitch" data-text="Software Engineer" aria-hidden="true">Software Engineer</span><span class="sr-only">Software Engineer</span>.</span></h1>
+          <p class="hero-sub">Реальные решения и опыт, архитектура проектов, AI-first разработка с агентами, разбор production кейсов и сообщество.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href={TRIBUTE_URL} target="_blank" rel="noopener">Получить доступ</a>
+            <a class="btn btn-secondary" href="#inside">Что внутри</a>
+          </div>
+        </div>
+        <div class="hero-object">
+          <div class="hero-float">
+            <div class="hero-jitter">
+              <div class="hero-glow" aria-hidden="true"></div>
+              <picture>
+                <source srcset="/assets/hero-computer.webp" type="image/webp">
+                <img fetchpriority="high" decoding="async" src="/assets/hero-computer.png" width="900" height="900" alt="Ретро-компьютер из глины с оранжевой буквой S на экране – символ Sachkov Inside">
+              </picture>
+            </div>
+          </div>
+          <div class="hero-shadow" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>

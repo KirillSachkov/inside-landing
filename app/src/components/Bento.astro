@@ -1,0 +1,112 @@
+---
+import { TRIBUTE_URL } from "../config";
+---
+
+    <section class="bento-sec" id="inside" aria-label="Что внутри">
+      <div class="wrap">
+        <div class="bento-band">
+          <h2>Что внутри</h2>
+
+          <div class="bento-grid">
+            <!-- 1. PRODUCTION · 3D object -->
+            <article class="tile t-prod reveal">
+              <h3>Production разработка</h3>
+              <p class="tile-desc">Регулярные материалы о том, как устроена реальная разработка веб-сервисов.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="/assets/tile-production.webp" type="image/webp">
+                    <img fetchpriority="low" src="/assets/tile-production.png" width="693" height="800" alt="Глиняный мини-сервер с оранжевыми статус-лампочками – материалы по production-разработке">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 2. AI-FIRST · 3D object -->
+            <article class="tile t-ai reveal">
+              <h3>Работа с AI-агентами</h3>
+              <p class="tile-desc">Harness, скиллы и пайплайны агентов: проверяем результат их работы и учимся принимать правильные решения.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="/assets/tile-ai.webp" type="image/webp">
+                    <img fetchpriority="low" src="/assets/tile-ai.png" width="800" height="762" alt="Глиняный робот-ассистент с буквой S на корпусе – работа с AI-агентами">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 3. АРХИТЕКТУРА · 3D object -->
+            <article class="tile t-arch reveal">
+              <h3>Архитектура проектов</h3>
+              <p class="tile-desc">Разбор устройства бэкенда, фронтенда и микросервисов. Строим реальные проекты, а не учебные примеры.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="/assets/tile-arch.webp" type="image/webp">
+                    <img fetchpriority="low" src="/assets/tile-arch.png" width="799" height="800" alt="Глиняные модули, соединённые светящимися трубками – архитектура проектов">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 4. КАРЬЕРА · 3D object -->
+            <article class="tile t-career reveal">
+              <h3>Карьера</h3>
+              <p class="tile-desc">Гайды по поиску работы и продвижению: резюме, собеседования, грейды.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="/assets/tile-career.webp" type="image/webp">
+                    <img fetchpriority="low" src="/assets/tile-career.png" width="734" height="800" alt="Глиняная лестница с оранжевым флажком на вершине – карьерный рост">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 5. ПРАКТИКА · 3D object (wide) -->
+            <article class="tile t-practice reveal">
+              <div class="tile-text">
+                <h3>Реальная практика</h3>
+                <p class="tile-desc">Показываю свою текущую работу: решения, ошибки, инфраструктуру, деплой. Практика, с которой можно работать на production, улучшать навыки и продвигаться в карьере.</p>
+              </div>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="/assets/tile-practice.webp" type="image/webp">
+                    <img fetchpriority="low" src="/assets/tile-practice.png" width="800" height="797" alt="Глиняный верстак с инструментами и лампой – реальная практика">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 6. СООБЩЕСТВО · 3D object -->
+            <article class="tile t-community reveal">
+              <h3>Сообщество</h3>
+              <p class="tile-desc">Стань частью комьюнити разработчиков: закрытый чат, обмен опытом, обратная связь по твоим решениям и прямая связь со мной.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="/assets/tile-community.webp" type="image/webp">
+                    <img fetchpriority="low" src="/assets/tile-community.png" width="800" height="757" alt="Глиняные пузыри диалога с оранжевыми точками – сообщество">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+          </div>
+          <p class="sec-cta sec-cta--dark reveal"><a href={TRIBUTE_URL} target="_blank" rel="noopener">Получить доступ</a></p>
+        </div>
+      </div>
+    </section>

@@ -1,0 +1,48 @@
+---
+import { TRIBUTE_URL } from "../config";
+---
+
+  <div class="nav-wrap">
+    <header class="nav-pill">
+      <a class="brand" href="#">SACHKOV&nbsp;INSIDE</a>
+      <nav class="menu" aria-label="Основная навигация">
+        <ul>
+          <li><a href="#inside"><span class="num">01</span>Что внутри</a></li>
+          <li><a href="#pipeline"><span class="num">02</span>Процесс</a></li>
+          <li><a href="#author"><span class="num">03</span>Автор</a></li>
+          <li><a href="#fit"><span class="num">04</span>Кому подходит</a></li>
+          <li><a href="#faq"><span class="num">05</span>FAQ</a></li>
+        </ul>
+      </nav>
+      <div class="nav-side">
+        <a class="nav-cta" href={TRIBUTE_URL} target="_blank" rel="noopener">Получить доступ</a>
+        <button class="nav-burger" type="button" aria-expanded="false" aria-controls="nav-overlay" aria-label="Открыть меню">
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
+    <nav aria-label="Мобильная навигация">
+      <ul>
+        <li><a href="#inside"><span class="num">01</span>Что внутри</a></li>
+        <li><a href="#pipeline"><span class="num">02</span>Процесс</a></li>
+        <li><a href="#author"><span class="num">03</span>Автор</a></li>
+        <li><a href="#fit"><span class="num">04</span>Кому подходит</a></li>
+        <li><a href="#faq"><span class="num">05</span>FAQ</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary nav-overlay-cta" href={TRIBUTE_URL} target="_blank" rel="noopener">Получить доступ</a>
+  </div>
+
+  <noscript>
+    <nav class="nojs-nav" aria-label="Основная навигация без JavaScript">
+      <a href="#inside">Что внутри</a>
+      <a href="#pipeline">Процесс</a>
+      <a href="#author">Автор</a>
+      <a href="#fit">Кому подходит</a>
+      <a href="#faq">FAQ</a>
+      <a href={TRIBUTE_URL} target="_blank" rel="noopener">Получить доступ</a>
+    </nav>
+  </noscript>

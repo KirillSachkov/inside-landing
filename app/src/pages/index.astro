@@ -1,0 +1,37 @@
+---
+import BaseLayout from "../layouts/BaseLayout.astro";
+import Nav from "../components/Nav.astro";
+import Hero from "../components/Hero.astro";
+import Bento from "../components/Bento.astro";
+import Pipeline from "../components/Pipeline.astro";
+import Author from "../components/Author.astro";
+import Fit from "../components/Fit.astro";
+import Faq from "../components/Faq.astro";
+import FinalCta from "../components/FinalCta.astro";
+import Footer from "../components/Footer.astro";
+
+const title = "Sachkov Inside - приватный канал по production-разработке и AI-first";
+const description =
+  "Реальные решения и опыт, архитектура проектов, AI-first разработка с агентами, разбор production кейсов и сообщество. Приватный Telegram-канал Кирилла Сачкова.";
+---
+
+<BaseLayout {title} {description}>
+  <canvas id="dotgrid" aria-hidden="true"></canvas>
+
+  <div class="page">
+    <Nav />
+    <main>
+      <Hero />
+      <Bento />
+      <Pipeline />
+      <Author />
+      <Fit />
+      <Faq />
+      <FinalCta />
+    </main>
+    <Footer />
+  </div>
+
+  <script src="../scripts/behaviors.js"></script>
+  <script src="../scripts/dot-grid.js"></script>
+</BaseLayout>

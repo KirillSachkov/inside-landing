@@ -1,0 +1,45 @@
+---
+import { TRIBUTE_URL } from "../config";
+import SocialLinks from "./SocialLinks.astro";
+---
+
+    <section class="author" id="author" aria-label="Кто ведёт канал">
+      <div class="wrap">
+        <div class="author-head reveal">
+          <h2>Кто ведёт канал</h2>
+        </div>
+        <div class="author-card reveal">
+          <div class="author-photo">
+            <picture>
+              <source srcset="/assets/author.webp" type="image/webp">
+              <img fetchpriority="low" src="/assets/author.png" width="839" height="1200" alt="Кирилл Сачков, автор канала Sachkov Inside">
+            </picture>
+          </div>
+          <div class="author-body">
+            <h3 class="author-name">Кирилл Сачков</h3>
+            <p class="author-facts">Software Engineer · 5 лет опыта · 3+ года менторства</p>
+            <p class="author-text">В одиночку построил платформу SachkovLearn с нуля: архитектура, бэкенд, фронтенд, деплой. Веду YouTube-канал по разработке. На курсе больше 250 учеников, десятки получили офферы.</p>
+            <p class="author-text">Sachkov Inside – моя текущая работа в реальном времени: всё, что делаю и изучаю сам, попадает в канал. При любых сомнениях напиши лично, отвечаю каждому.</p>
+            <dl class="author-stats">
+              <div>
+                <dt>Опыт</dt>
+                <dd>5+ лет</dd>
+              </div>
+              <div>
+                <dt>Менторство</dt>
+                <dd>3+ года</dd>
+              </div>
+              <div>
+                <dt>Ученики</dt>
+                <dd>250+</dd>
+              </div>
+            </dl>
+            <div class="author-cta">
+              <a class="btn btn-primary" href="https://t.me/sachkov_blog" target="_blank" rel="noopener">Написать мне</a>
+              <SocialLinks className="author-social" />
+            </div>
+          </div>
+        </div>
+        <p class="sec-cta reveal"><a href={TRIBUTE_URL} target="_blank" rel="noopener">Получить доступ</a></p>
+      </div>
+    </section>
