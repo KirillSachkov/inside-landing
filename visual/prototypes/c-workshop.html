@@ -1,0 +1,612 @@
+<!-- Direction C — «Мастерская» (warm editorial paper, bento of live artifacts) — prototype for visual comparison, not production -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sachkov Inside — Мастерская</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Bitter:wght@600;700;800&family=Inter:wght@400;500;600&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --cream: #FCF6F0;
+    --kraft: #E4D9CB;
+    --olive: #3C4630;
+    --terra: #BB7548;
+    --ink: #2A2620;
+    --card-border: #E0D8CC;
+    --white: #FFFFFF;
+    --shadow: 0 10px 30px rgba(60, 70, 48, 0.08), 0 2px 6px rgba(60, 70, 48, 0.05);
+    --radius: 18px;
+    --maxw: 1160px;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    background: var(--cream);
+    color: var(--ink);
+    font-family: 'Inter', system-ui, -apple-system, sans-serif;
+    font-size: 16px;
+    line-height: 1.6;
+    -webkit-font-smoothing: antialiased;
+  }
+
+  ::selection { background: var(--terra); color: var(--cream); }
+
+  a { color: var(--terra); }
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--terra);
+    outline-offset: 3px;
+    border-radius: 4px;
+  }
+
+  .wrap { max-width: var(--maxw); margin: 0 auto; padding: 0 clamp(20px, 4vw, 48px); }
+
+  /* ---------- Nav ---------- */
+  .site-header {
+    padding: 28px 0 0;
+  }
+  .nav {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    flex-wrap: wrap;
+  }
+  .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.18em;
+    color: var(--olive);
+    text-decoration: none;
+  }
+  .nav-links {
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+    row-gap: 8px;
+    gap: clamp(18px, 3vw, 36px);
+    list-style: none;
+  }
+  .nav-links a {
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    font-variant: small-caps;
+    color: var(--olive);
+    text-decoration: none;
+  }
+  .nav-links a:hover { color: var(--terra); }
+  .nav-links a.nav-cta {
+    color: var(--terra);
+    text-decoration: underline;
+    text-underline-offset: 5px;
+    text-decoration-thickness: 1.5px;
+  }
+  .nav-links a.nav-cta:hover { color: var(--olive); }
+  .nav-rule {
+    height: 1px;
+    background: var(--card-border);
+    margin-top: 24px;
+  }
+
+  /* ---------- Hero ---------- */
+  .hero {
+    padding: clamp(64px, 10vw, 120px) 0 clamp(56px, 8vw, 88px);
+  }
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    font-weight: 500;
+    letter-spacing: 0.24em;
+    color: var(--terra);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 14px;
+  }
+  .eyebrow::before {
+    content: "";
+    width: 32px;
+    height: 1px;
+    background: var(--terra);
+    display: inline-block;
+  }
+  h1 {
+    font-family: 'Bitter', 'Zilla Slab', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(38px, 6.2vw, 76px);
+    line-height: 1.08;
+    letter-spacing: -0.01em;
+    color: var(--olive);
+    max-width: 14ch;
+  }
+  h1 .accent { color: var(--terra); }
+  .subline {
+    margin-top: 28px;
+    font-size: clamp(16px, 1.5vw, 19px);
+    line-height: 1.65;
+    max-width: 54ch;
+    color: var(--ink);
+  }
+  .cta-row {
+    margin-top: 44px;
+    display: flex;
+    gap: 16px;
+    flex-wrap: wrap;
+    align-items: center;
+  }
+  .btn {
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    font-family: 'Inter', sans-serif;
+    font-weight: 600;
+    font-size: 15px;
+    padding: 15px 30px;
+    border-radius: 999px;
+    text-decoration: none;
+    border: 1.5px solid var(--olive);
+    transition: transform 0.2s ease, box-shadow 0.2s ease, background 0.2s ease;
+    cursor: pointer;
+  }
+  .btn-primary {
+    background: var(--olive);
+    color: var(--cream);
+  }
+  .btn-primary:hover {
+    background: var(--terra);
+    border-color: var(--terra);
+    transform: translateY(-2px);
+    box-shadow: 0 8px 20px rgba(187, 117, 72, 0.3);
+  }
+  .btn-secondary {
+    background: transparent;
+    color: var(--olive);
+  }
+  .btn-secondary:hover {
+    background: var(--white);
+    transform: translateY(-2px);
+    box-shadow: var(--shadow);
+  }
+  .btn .arrow { font-family: 'JetBrains Mono', monospace; }
+
+  /* ---------- Proof / bento ---------- */
+  .proof { padding: 0 0 clamp(72px, 9vw, 110px); }
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 20px;
+    flex-wrap: wrap;
+    margin-bottom: 40px;
+  }
+  h2 {
+    font-family: 'Bitter', 'Zilla Slab', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(28px, 3.6vw, 44px);
+    line-height: 1.15;
+    color: var(--olive);
+  }
+  .section-kicker {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: 0.18em;
+    color: var(--terra);
+  }
+
+  .bento {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 20px;
+  }
+  .card {
+    background: var(--white);
+    border: 1px solid var(--card-border);
+    border-radius: var(--radius);
+    box-shadow: var(--shadow);
+    padding: 26px;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    min-width: 0;
+  }
+  .card-wide { grid-column: span 2; }
+  .card-kraft { background: var(--kraft); border-color: rgba(60,70,48,0.14); }
+
+  .card-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 500;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--terra);
+  }
+  .card-title {
+    font-family: 'Bitter', Georgia, serif;
+    font-weight: 700;
+    font-size: 19px;
+    color: var(--olive);
+    line-height: 1.3;
+  }
+  .card-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--olive);
+    opacity: 0.85;
+  }
+
+  /* build progress */
+  .progress-track {
+    height: 5px;
+    background: rgba(60,70,48,0.14);
+    border-radius: 999px;
+    overflow: hidden;
+  }
+  .progress-fill {
+    height: 100%;
+    width: 68%;
+    background: var(--terra);
+    border-radius: 999px;
+  }
+  .progress-meta {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+  }
+
+  /* code card */
+  .code-block {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.75;
+    overflow-x: auto;
+    max-width: 100%;
+    min-width: 0;
+    white-space: pre;
+    color: var(--ink);
+  }
+  .code-block .ln { color: rgba(42,38,32,0.35); user-select: none; display: inline-block; width: 2ch; margin-right: 14px; }
+  .tk-kw { color: #8A4B22; font-weight: 600; }
+  .tk-fn { color: #4A5E36; }
+  .tk-str { color: #BB7548; }
+  .tk-cm { color: rgba(42,38,32,0.45); font-style: italic; }
+
+  /* chat card */
+  .msg {
+    display: flex;
+    flex-direction: column;
+    gap: 3px;
+    padding: 12px 16px;
+    background: var(--cream);
+    border: 1px solid var(--card-border);
+    border-radius: 14px;
+  }
+  .msg + .msg { margin-top: 10px; }
+  .msg-author {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--terra);
+    font-weight: 600;
+  }
+  .msg-text { font-size: 13.5px; line-height: 1.5; color: var(--ink); }
+
+  /* stat card */
+  .stat-card { justify-content: center; }
+  .stat-number {
+    font-family: 'Bitter', Georgia, serif;
+    font-weight: 800;
+    font-size: clamp(56px, 6vw, 76px);
+    line-height: 1;
+    color: var(--terra);
+    letter-spacing: -0.02em;
+  }
+  .stat-caption { font-size: 15px; color: var(--olive); font-weight: 500; }
+
+  /* adr status */
+  .adr-status {
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    align-self: flex-start;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.12em;
+    color: var(--olive);
+    background: var(--cream);
+    border: 1px solid var(--card-border);
+    padding: 5px 12px;
+    border-radius: 999px;
+  }
+  .adr-status .dot { width: 7px; height: 7px; border-radius: 50%; background: var(--terra); }
+  .adr-excerpt { font-size: 14px; line-height: 1.6; color: var(--ink); opacity: 0.9; }
+
+  /* diagram card */
+  .diagram { width: 100%; height: auto; display: block; }
+
+  /* ---------- Signature section ---------- */
+  .how {
+    background: var(--kraft);
+    padding: clamp(72px, 9vw, 110px) 0;
+    border-top: 1px solid rgba(60,70,48,0.12);
+    border-bottom: 1px solid rgba(60,70,48,0.12);
+  }
+  .how-row {
+    display: grid;
+    grid-template-columns: 100px 1fr;
+    gap: clamp(20px, 4vw, 56px);
+    padding: 36px 0;
+    border-top: 1px solid rgba(60,70,48,0.18);
+    align-items: start;
+  }
+  .how-row:first-of-type { border-top: none; padding-top: 8px; }
+  .how-num {
+    font-family: 'Bitter', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(34px, 4vw, 52px);
+    color: var(--terra);
+    line-height: 1;
+  }
+  .how-title {
+    font-family: 'Bitter', Georgia, serif;
+    font-weight: 700;
+    font-size: clamp(21px, 2.2vw, 27px);
+    color: var(--olive);
+    margin-bottom: 10px;
+  }
+  .how-copy { font-size: clamp(15px, 1.4vw, 17px); line-height: 1.65; max-width: 62ch; }
+
+  /* ---------- Footer ---------- */
+  .site-footer {
+    padding: 44px 0 48px;
+    text-align: center;
+  }
+  .footer-mono {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: 0.22em;
+    color: var(--olive);
+    opacity: 0.75;
+  }
+
+  /* ---------- Reveal (JS-enhanced only) ---------- */
+  .reveal {
+    opacity: 0;
+    transform: translateY(22px);
+    transition: opacity 0.6s ease, transform 0.6s ease;
+  }
+  .reveal.is-visible {
+    opacity: 1;
+    transform: none;
+  }
+  .progress-fill.animated {
+    width: 0;
+    transition: width 1.2s cubic-bezier(0.22, 1, 0.36, 1);
+  }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .reveal { opacity: 1 !important; transform: none !important; transition: none; }
+    .progress-fill.animated { width: 68% !important; transition: none; }
+    .btn { transition: none; }
+  }
+
+  /* ---------- Responsive ---------- */
+  @media (max-width: 860px) {
+    .bento { grid-template-columns: repeat(2, 1fr); }
+    .card-wide { grid-column: span 2; }
+  }
+  @media (max-width: 560px) {
+    .bento { grid-template-columns: 1fr; }
+    .card-wide { grid-column: span 1; }
+    .how-row { grid-template-columns: 1fr; gap: 12px; }
+    .nav { gap: 14px; }
+    .nav-links { gap: 14px 20px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-header">
+  <div class="wrap">
+    <nav class="nav" aria-label="Основная навигация">
+      <a class="brand" href="#">SACHKOV INSIDE</a>
+      <ul class="nav-links">
+        <li><a href="#">Что внутри</a></li>
+        <li><a href="#">Формат</a></li>
+        <li><a href="#">Доступ</a></li>
+        <li><a class="nav-cta" href="#">Запросить доступ</a></li>
+      </ul>
+    </nav>
+    <div class="nav-rule" aria-hidden="true"></div>
+  </div>
+</header>
+
+<main>
+  <section class="hero wrap" aria-labelledby="hero-title">
+    <p class="eyebrow">PRIVATE ENGINEERING ACCESS</p>
+    <h1 id="hero-title"><span class="accent">Внутри</span> разработки. До&nbsp;готового результата.</h1>
+    <p class="subline">Реальные решения, архитектура, AI-агенты, production и&nbsp;рабочие артефакты&nbsp;— в&nbsp;приватном Telegram-канале.</p>
+    <div class="cta-row">
+      <a class="btn btn-primary" href="#">Получить доступ <span class="arrow" aria-hidden="true">→</span></a>
+      <a class="btn btn-secondary" href="#">Что внутри</a>
+    </div>
+  </section>
+
+  <section class="proof wrap" aria-labelledby="proof-title">
+    <div class="section-head">
+      <h2 id="proof-title">Что попадает внутрь</h2>
+      <span class="section-kicker">LIVE EVIDENCE</span>
+    </div>
+
+    <div class="bento">
+      <!-- 1. Build-серия progress (wide) -->
+      <article class="card card-wide" data-reveal>
+        <div class="progress-meta">
+          <span class="card-label">Build-серия</span>
+          <span class="card-mono">Эпизод 12 · weekly</span>
+        </div>
+        <h3 class="card-title">Собираем продукт публично: от идеи до деплоя</h3>
+        <div class="progress-track" role="progressbar" aria-valuenow="68" aria-valuemin="0" aria-valuemax="100" aria-label="Прогресс build-серии: 68%">
+          <div class="progress-fill" data-progress></div>
+        </div>
+        <p class="card-mono">Сезон 2 · 68% маршрута пройдено</p>
+      </article>
+
+      <!-- 2. ADR mini card -->
+      <article class="card" data-reveal>
+        <span class="card-label">ADR-021</span>
+        <h3 class="card-title">ADR-021 · Выбор брокера сообщений</h3>
+        <span class="adr-status"><span class="dot" aria-hidden="true"></span>ACCEPTED</span>
+      </article>
+
+      <!-- 3. Code card on kraft -->
+      <article class="card card-kraft card-wide" data-reveal>
+        <span class="card-label">service.ts</span>
+        <div class="code-block" aria-label="Фрагмент кода service.ts"><span class="ln">1</span><span class="tk-cm">// AgentService: вызов AI API с ретраями</span>
+<span class="ln">2</span><span class="tk-kw">export class</span> <span class="tk-fn">AgentService</span> {
+<span class="ln">3</span>  <span class="tk-kw">constructor</span>(<span class="tk-kw">private readonly</span> client: AiClient) {}
+<span class="ln">4</span>
+<span class="ln">5</span>  <span class="tk-kw">async</span> <span class="tk-fn">runTask</span>(prompt: <span class="tk-kw">string</span>): <span class="tk-fn">Promise</span>&lt;TaskResult&gt; {
+<span class="ln">6</span>    <span class="tk-kw">const</span> res = <span class="tk-kw">await</span> <span class="tk-kw">this</span>.client.<span class="tk-fn">complete</span>({ model: <span class="tk-str">"gpt-5"</span>, prompt });
+<span class="ln">7</span>    <span class="tk-kw">return</span> <span class="tk-fn">parseResult</span>(res.output);
+<span class="ln">8</span>  }
+}</div>
+      </article>
+
+      <!-- 4. Chat card -->
+      <article class="card" data-reveal>
+        <span class="card-label">Чат</span>
+        <div>
+          <div class="msg">
+            <span class="msg-author">@kirill</span>
+            <span class="msg-text">Упал прод из-за connection pool. Разбор — сегодня вечером.</span>
+          </div>
+          <div class="msg">
+            <span class="msg-author">@member</span>
+            <span class="msg-text">Жди диаграмму в ADR? Было бы отлично.</span>
+          </div>
+        </div>
+      </article>
+
+      <!-- 5. Telegram post card -->
+      <article class="card" data-reveal>
+        <span class="card-label">Telegram · пост</span>
+        <h3 class="card-title">Разбор продакшн-инцидента</h3>
+        <p class="card-mono">👁 342 · 💬 18 · ↗ 24</p>
+      </article>
+
+      <!-- 6. Architecture diagram -->
+      <article class="card" data-reveal>
+        <span class="card-label">Архитектура</span>
+        <svg class="diagram" viewBox="0 0 320 190" role="img" aria-label="Диаграмма: Web/App → API Gateway → Core Service → PostgreSQL">
+          <defs>
+            <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+              <path d="M0 0L10 5L0 10z" fill="#BB7548"/>
+            </marker>
+          </defs>
+          <g font-family="'JetBrains Mono', monospace" font-size="10.5" fill="#2A2620">
+            <rect x="10" y="14" width="86" height="30" rx="8" fill="#FCF6F0" stroke="#E0D8CC"/>
+            <text x="53" y="32.5" text-anchor="middle">Web/App</text>
+            <line x1="100" y1="29" x2="118" y2="29" stroke="#BB7548" stroke-width="1.5" marker-end="url(#arr)"/>
+            <rect x="122" y="14" width="96" height="30" rx="8" fill="#FCF6F0" stroke="#E0D8CC"/>
+            <text x="170" y="32.5" text-anchor="middle">API Gateway</text>
+            <line x1="170" y1="48" x2="170" y2="66" stroke="#BB7548" stroke-width="1.5" marker-end="url(#arr)"/>
+            <rect x="112" y="70" width="116" height="30" rx="8" fill="#FCF6F0" stroke="#E0D8CC"/>
+            <text x="170" y="88.5" text-anchor="middle">Core Service</text>
+            <line x1="170" y1="104" x2="170" y2="122" stroke="#BB7548" stroke-width="1.5" marker-end="url(#arr)"/>
+            <rect x="122" y="126" width="96" height="30" rx="8" fill="#3C4630"/>
+            <text x="170" y="144.5" text-anchor="middle" fill="#FCF6F0">PostgreSQL</text>
+            <text x="160" y="178" text-anchor="middle" fill="#BB7548" font-size="9.5">▲ request flow · prod</text>
+          </g>
+        </svg>
+      </article>
+
+      <!-- 7. Stat card -->
+      <article class="card stat-card" data-reveal>
+        <span class="stat-number">25+</span>
+        <span class="stat-caption">проектов за плечами — от стартапов до enterprise</span>
+      </article>
+    </div>
+  </section>
+
+  <section class="how" aria-labelledby="how-title">
+    <div class="wrap">
+      <div class="section-head">
+        <h2 id="how-title">Как это устроено</h2>
+        <span class="section-kicker">ФОРМАТ</span>
+      </div>
+
+      <div class="how-row" data-reveal>
+        <span class="how-num" aria-hidden="true">01</span>
+        <div>
+          <h3 class="how-title">Архитектура</h3>
+          <p class="how-copy">Проектирование систем, границы сервисов, контракты, ADR. Реальные диаграммы и&nbsp;обоснования решений.</p>
+        </div>
+      </div>
+
+      <div class="how-row" data-reveal>
+        <span class="how-num" aria-hidden="true">02</span>
+        <div>
+          <h3 class="how-title">AI-агенты</h3>
+          <p class="how-copy">Рабочие AI-воркфлоу, промпты, инструменты, оценка качества. Практика без воды.</p>
+        </div>
+      </div>
+
+      <div class="how-row" data-reveal>
+        <span class="how-num" aria-hidden="true">03</span>
+        <div>
+          <h3 class="how-title">Production</h3>
+          <p class="how-copy">Инфраструктура, наблюдаемость, отладка, деплой, инциденты. Как держим реальные системы в&nbsp;строю.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="site-footer">
+  <div class="wrap">
+    <p class="footer-mono">PRIVATE INVITE ONLY · NO SCREENSHOTS</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+  if (reduceMotion) return;
+
+  var fill = document.querySelector('[data-progress]');
+  if (fill) fill.classList.add('animated');
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (!entry.isIntersecting) return;
+      var el = entry.target;
+      var idx = parseInt(el.dataset.revealIndex || '0', 10);
+      setTimeout(function () {
+        el.classList.add('is-visible');
+        if (el.querySelector && el.querySelector('[data-progress]')) {
+          var bar = el.querySelector('[data-progress]');
+          requestAnimationFrame(function () { bar.style.width = '68%'; });
+        }
+        io.unobserve(el);
+      }, idx * 60);
+    });
+  }, { threshold: 0.15, rootMargin: '0px 0px -40px 0px' });
+
+  document.querySelectorAll('[data-reveal]').forEach(function (el, i) {
+    el.dataset.revealIndex = String(i % 5);
+    el.classList.add('reveal');
+    io.observe(el);
+  });
+})();
+</script>
+</body>
+</html>

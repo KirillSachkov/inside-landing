@@ -1,0 +1,742 @@
+<!-- Direction B — «Консоль» — prototype for visual comparison, not production -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sachkov Inside — Консоль (Direction B)</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@600;700&family=JetBrains+Mono:wght@400;500&family=Instrument+Serif:ital@1&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --bg: #13111C;
+    --panel: #1B1826;
+    --panel-edge: #2A2538;
+    --text: #EDEBF2;
+    --dim: #9B96A8;
+    --faint: #5B566B;
+    --amber: #E8A33D;
+    --green: #7FB685;
+    --glow-dust: #6B4B5A;
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; overflow-x: hidden; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'Space Grotesk', system-ui, sans-serif;
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: rgba(232, 163, 61, .25); }
+
+  a { color: inherit; text-decoration: none; }
+
+  a:focus-visible, button:focus-visible {
+    outline: 2px solid var(--amber);
+    outline-offset: 3px;
+    border-radius: 2px;
+  }
+
+  .mono { font-family: 'JetBrains Mono', ui-monospace, monospace; }
+
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding: 0 clamp(20px, 4vw, 48px);
+  }
+
+  /* ---------- nav ---------- */
+
+  header.nav {
+    border-bottom: 1px solid var(--panel-edge);
+    background: rgba(19, 17, 28, .82);
+    backdrop-filter: blur(8px);
+    position: sticky;
+    top: 0;
+    z-index: 10;
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    height: 64px;
+  }
+
+  .brand {
+    font-family: 'JetBrains Mono', monospace;
+    font-weight: 500;
+    font-size: 13px;
+    letter-spacing: .18em;
+    color: var(--text);
+  }
+
+  .nav-links {
+    display: flex;
+    align-items: center;
+    gap: clamp(16px, 3vw, 32px);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 13px;
+    color: var(--dim);
+  }
+
+  .nav-links a:hover { color: var(--text); }
+
+  .status {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .14em;
+    color: var(--amber);
+    display: flex;
+    align-items: center;
+    gap: 7px;
+  }
+
+  .status .dot {
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 8px rgba(232, 163, 61, .8);
+  }
+
+  /* ---------- hero ---------- */
+
+  .hero {
+    position: relative;
+    padding: clamp(64px, 9vw, 120px) 0 clamp(72px, 9vw, 130px);
+  }
+
+  /* dusty radial glow, breathes slowly behind the artifact cluster */
+  .hero-glow {
+    position: absolute;
+    top: 6%;
+    right: -14%;
+    width: min(64vw, 880px);
+    aspect-ratio: 1;
+    background: radial-gradient(circle, var(--glow-dust) 0%, transparent 62%);
+    opacity: .55;
+    filter: blur(10px);
+    pointer-events: none;
+    z-index: 0;
+  }
+
+  @keyframes breathe {
+    0%, 100% { opacity: .6; }
+    50%      { opacity: 1; }
+  }
+
+  .hero-glow.is-live { animation: breathe 8s ease-in-out infinite; }
+
+  .hero-grid {
+    position: relative;
+    z-index: 1;
+    display: grid;
+    grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+    gap: clamp(40px, 6vw, 88px);
+    align-items: center;
+  }
+
+  .hero-copy, .screens { min-width: 0; }
+
+  .eyebrow {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .22em;
+    color: var(--dim);
+    margin-bottom: 28px;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+  }
+
+  .eyebrow::before {
+    content: '';
+    width: 6px;
+    height: 6px;
+    border-radius: 50%;
+    background: var(--amber);
+    box-shadow: 0 0 8px rgba(232, 163, 61, .7);
+    flex: none;
+  }
+
+  h1 {
+    font-size: clamp(2.4rem, 5.4vw, 4.4rem);
+    line-height: 1.04;
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+
+  h1 .line { display: block; }
+  h1 .l2 { color: var(--dim); }
+  h1 .kw { color: var(--amber); }
+
+  .subline {
+    margin-top: 28px;
+    font-size: clamp(1rem, 1.4vw, 1.15rem);
+    line-height: 1.6;
+    color: var(--dim);
+    max-width: 34em;
+    font-weight: 600;
+  }
+
+  .subline .serif {
+    font-family: 'Instrument Serif', Georgia, serif;
+    font-style: italic;
+    font-size: 1.12em;
+    color: var(--text);
+  }
+
+  .cta-row {
+    margin-top: 40px;
+    display: flex;
+    flex-wrap: wrap;
+    gap: 16px;
+  }
+
+  .btn {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 14px;
+    letter-spacing: .04em;
+    padding: 15px 30px;
+    border-radius: 6px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    transition: transform .18s ease, box-shadow .18s ease, border-color .18s ease;
+  }
+
+  .btn-primary {
+    background: var(--amber);
+    color: #13111C;
+    font-weight: 500;
+    box-shadow: 0 0 0 rgba(232, 163, 61, 0);
+  }
+
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 8px 30px rgba(232, 163, 61, .28);
+  }
+
+  .btn-ghost {
+    border: 1px solid var(--panel-edge);
+    color: var(--text);
+    background: transparent;
+  }
+
+  .btn-ghost:hover { border-color: var(--dim); }
+
+  /* ---------- artifact screens ---------- */
+
+  .screens {
+    position: relative;
+    perspective: 1200px;
+  }
+
+  .screens-beam {
+    position: absolute;
+    inset: 8% -6%;
+    background: radial-gradient(ellipse at 50% 45%,
+      rgba(232, 163, 61, .13) 0%,
+      rgba(237, 235, 242, .05) 42%,
+      transparent 70%);
+    filter: blur(28px);
+    pointer-events: none;
+  }
+
+  .screens-grid {
+    position: relative;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 22px;
+  }
+
+  .card {
+    min-width: 0;
+    background: var(--panel);
+    border: 1px solid var(--panel-edge);
+    border-radius: 10px;
+    padding: 18px;
+    box-shadow: 0 18px 50px rgba(0, 0, 0, .45);
+    transition: transform .35s ease, box-shadow .35s ease;
+  }
+
+  .card:hover {
+    box-shadow: 0 22px 60px rgba(0, 0, 0, .55),
+                0 0 40px rgba(232, 163, 61, .07);
+  }
+
+  .tilt-a { transform: rotate(-3.5deg) translateY(6px); }
+  .tilt-b { transform: rotate(2.5deg) translateY(-8px); }
+  .tilt-c { transform: rotate(2deg) translateY(10px); }
+  .tilt-d { transform: rotate(-2.5deg) translateY(-4px); }
+
+  .tilt-a:hover { transform: rotate(-2deg) translateY(0); }
+  .tilt-b:hover { transform: rotate(1.2deg) translateY(-12px); }
+  .tilt-c:hover { transform: rotate(1deg) translateY(4px); }
+  .tilt-d:hover { transform: rotate(-1.2deg) translateY(-8px); }
+
+  .card-head {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+    margin-bottom: 14px;
+  }
+
+  .card-title {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--dim);
+    letter-spacing: .04em;
+  }
+
+  .win-dots { display: flex; gap: 6px; flex: none; }
+  .win-dots i {
+    width: 8px; height: 8px; border-radius: 50%;
+    background: var(--panel-edge);
+    display: block;
+  }
+
+  .badge {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 10px;
+    letter-spacing: .14em;
+    color: var(--green);
+    border: 1px solid rgba(127, 182, 133, .35);
+    border-radius: 999px;
+    padding: 3px 10px;
+    flex: none;
+  }
+
+  .card-meta {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--faint);
+    letter-spacing: .03em;
+  }
+
+  /* code card */
+
+  pre.code {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12.5px;
+    line-height: 1.7;
+    overflow-x: auto;
+    color: var(--dim);
+  }
+
+  .code .ln { color: var(--faint); user-select: none; display: inline-block; width: 1.6em; }
+  .code .kw  { color: var(--text); font-weight: 500; }
+  .code .fn  { color: #B9A8E0; }
+  .code .str { color: var(--green); }
+  .code .typ { color: var(--dim); font-style: italic; }
+
+  .deploy-line {
+    margin-top: 12px;
+    padding-top: 12px;
+    border-top: 1px dashed var(--panel-edge);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    color: var(--green);
+  }
+
+  /* ADR card */
+
+  .adr-title {
+    font-size: 15px;
+    font-weight: 700;
+    line-height: 1.4;
+  }
+
+  .adr-body {
+    margin-top: 10px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    line-height: 1.7;
+    color: var(--faint);
+  }
+
+  /* diagram card */
+
+  .diagram svg { display: block; width: 100%; height: auto; }
+
+  .diagram .box {
+    fill: var(--bg);
+    stroke: #4A4459;
+    stroke-width: 1;
+    rx: 6;
+  }
+
+  .diagram .lbl {
+    fill: var(--dim);
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+  }
+
+  .diagram .edge { stroke: #4A4459; stroke-width: 1; }
+
+  /* telegram card */
+
+  .tg-head { display: flex; align-items: center; gap: 12px; margin-bottom: 12px; }
+
+  .tg-avatar {
+    width: 34px; height: 34px;
+    border-radius: 50%;
+    background: radial-gradient(circle at 32% 30%, #3A3349, #221E30);
+    border: 1px solid var(--panel-edge);
+    display: flex; align-items: center; justify-content: center;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    color: var(--text);
+    flex: none;
+  }
+
+  .tg-name { font-size: 13px; font-weight: 700; }
+  .tg-sub  { font-family: 'JetBrains Mono', monospace; font-size: 10px; color: var(--faint); }
+
+  .tg-text { font-size: 14px; line-height: 1.55; font-weight: 600; }
+
+  .tg-meta {
+    margin-top: 14px;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11.5px;
+    color: var(--dim);
+    letter-spacing: .03em;
+  }
+
+  /* ---------- signature section ---------- */
+
+  .inside {
+    padding: clamp(72px, 10vw, 140px) 0;
+    border-top: 1px solid var(--panel-edge);
+  }
+
+  .section-label {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 12px;
+    letter-spacing: .22em;
+    color: var(--dim);
+    margin-bottom: 16px;
+  }
+
+  h2 {
+    font-size: clamp(1.9rem, 3.6vw, 3rem);
+    font-weight: 700;
+    letter-spacing: -0.015em;
+    margin-bottom: clamp(40px, 5vw, 64px);
+  }
+
+  .rows { border-top: 1px solid var(--panel-edge); }
+
+  .row {
+    display: grid;
+    grid-template-columns: 110px minmax(0, 220px) minmax(0, 1fr);
+    gap: clamp(20px, 4vw, 48px);
+    align-items: baseline;
+    padding: clamp(28px, 4vw, 44px) 0;
+    border-bottom: 1px solid var(--panel-edge);
+  }
+
+  .row-idx {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: clamp(1.6rem, 2.6vw, 2.2rem);
+    color: var(--faint);
+    font-weight: 400;
+  }
+
+  .row-title {
+    font-size: clamp(1.15rem, 1.8vw, 1.45rem);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+
+  .row-text {
+    color: var(--dim);
+    line-height: 1.65;
+    font-size: clamp(.95rem, 1.2vw, 1.05rem);
+    font-weight: 600;
+  }
+
+  .chip {
+    display: inline-block;
+    font-family: 'JetBrains Mono', monospace;
+    font-size: .82em;
+    color: var(--amber);
+    background: rgba(232, 163, 61, .09);
+    border: 1px solid rgba(232, 163, 61, .22);
+    border-radius: 999px;
+    padding: 2px 12px;
+    margin: 0 2px;
+    white-space: nowrap;
+    vertical-align: baseline;
+  }
+
+  /* ---------- footer ---------- */
+
+  footer {
+    border-top: 1px solid var(--panel-edge);
+    padding: 34px 0 42px;
+    text-align: center;
+  }
+
+  .foot-line {
+    font-family: 'JetBrains Mono', monospace;
+    font-size: 11px;
+    letter-spacing: .2em;
+    color: var(--faint);
+  }
+
+  /* ---------- reveal (JS-enhanced only; visible by default) ---------- */
+
+  .reveal-init {
+    opacity: 0;
+    transform: translateY(26px);
+  }
+
+  .screens.reveal-init { transform: none; }
+  .screens.reveal-init .screens-beam { opacity: 0; }
+  .screens.reveal-init .card { opacity: 0; transform: translateY(26px); }
+
+  .reveal-init.revealed {
+    opacity: 1;
+    transform: translateY(0);
+    transition: opacity .7s ease, transform .7s ease;
+  }
+
+  .screens.reveal-init.revealed .screens-beam {
+    opacity: 1;
+    transition: opacity 1.2s ease .15s;
+  }
+
+  .screens.reveal-init.revealed .card {
+    opacity: 1;
+    transition: opacity .7s ease, transform .7s ease;
+  }
+
+  .screens.reveal-init.revealed .tilt-a { transform: rotate(-3.5deg) translateY(6px); transition-delay: .05s; }
+  .screens.reveal-init.revealed .tilt-b { transform: rotate(2.5deg) translateY(-8px); transition-delay: .15s; }
+  .screens.reveal-init.revealed .tilt-c { transform: rotate(2deg) translateY(10px); transition-delay: .25s; }
+  .screens.reveal-init.revealed .tilt-d { transform: rotate(-2.5deg) translateY(-4px); transition-delay: .35s; }
+
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+    .hero-glow.is-live { animation: none; }
+    .card, .btn { transition: none; }
+    .reveal-init, .reveal-init.revealed,
+    .screens.reveal-init .card, .screens.reveal-init.revealed .card {
+      opacity: 1;
+      transform: none;
+      transition: none;
+    }
+    .screens.reveal-init .screens-beam { opacity: 1; }
+  }
+
+  /* ---------- responsive ---------- */
+
+  @media (max-width: 900px) {
+    .hero-grid { grid-template-columns: 1fr; }
+    .hero-glow { right: -30%; width: 110vw; top: 30%; }
+    .screens { max-width: 560px; margin: 0 auto; }
+    .row { grid-template-columns: 64px minmax(0, 1fr); }
+    .row-text { grid-column: 2; }
+  }
+
+  @media (max-width: 520px) {
+    .nav-links a { display: none; }
+    .screens-grid { grid-template-columns: 1fr; }
+    .tilt-a, .tilt-b, .tilt-c, .tilt-d { transform: none; }
+    .screens.reveal-init.revealed .tilt-a,
+    .screens.reveal-init.revealed .tilt-b,
+    .screens.reveal-init.revealed .tilt-c,
+    .screens.reveal-init.revealed .tilt-d { transform: none; }
+    .row { grid-template-columns: 1fr; gap: 10px; }
+    .row-text { grid-column: 1; }
+    .cta-row .btn { width: 100%; justify-content: center; }
+  }
+</style>
+</head>
+<body>
+
+<header class="nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#">SACHKOV INSIDE</a>
+    <nav class="nav-links" aria-label="Основная навигация">
+      <a href="#">Что внутри</a>
+      <a href="#">Формат</a>
+      <a href="#">Доступ</a>
+      <span class="status"><span class="dot" aria-hidden="true"></span>ONLINE</span>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+  <section class="hero" aria-labelledby="hero-title">
+    <div class="hero-glow" id="heroGlow" aria-hidden="true"></div>
+    <div class="wrap hero-grid">
+
+      <div class="hero-copy">
+        <p class="eyebrow">PRIVATE ENGINEERING ACCESS</p>
+        <h1 id="hero-title">
+          <span class="line">Внутри разработки.</span>
+          <span class="line l2">До <span class="kw">готового</span> результата.</span>
+        </h1>
+        <p class="subline">
+          Реальные решения, архитектура, AI-агенты, production и
+          <span class="serif">рабочие</span> артефакты — в приватном Telegram-канале.
+        </p>
+        <div class="cta-row">
+          <a class="btn btn-primary" href="#">Получить доступ</a>
+          <a class="btn btn-ghost" href="#">Что внутри</a>
+        </div>
+      </div>
+
+      <div class="screens" data-reveal>
+        <div class="screens-beam" aria-hidden="true"></div>
+        <div class="screens-grid">
+
+          <article class="card tilt-a" aria-label="Код: service.ts">
+            <div class="card-head">
+              <span class="card-title">service.ts</span>
+              <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <pre class="code"><span class="ln">1</span> <span class="kw">export class</span> <span class="typ">AgentService</span> {
+<span class="ln">2</span>   <span class="kw">constructor</span>(<span class="kw">private</span> ai: <span class="typ">AiClient</span>) {}
+<span class="ln">3</span>
+<span class="ln">4</span>   <span class="kw">async</span> <span class="fn">run</span>(task: <span class="typ">Task</span>) {
+<span class="ln">5</span>     <span class="kw">const</span> ctx = <span class="kw">await</span> <span class="kw">this</span>.memory.<span class="fn">recall</span>(task.id);
+<span class="ln">6</span>     <span class="kw">return</span> <span class="kw">this</span>.ai.<span class="fn">complete</span>({ model: <span class="str">'opus'</span>, input: task, ctx });
+<span class="ln">7</span>   }
+<span class="ln">8</span> }</pre>
+            <p class="deploy-line">✓ Deployed</p>
+          </article>
+
+          <article class="card tilt-b" aria-label="ADR-021">
+            <div class="card-head">
+              <span class="card-title">ADR-021</span>
+              <span class="badge">ACCEPTED</span>
+            </div>
+            <h3 class="adr-title">Выбор брокера сообщений</h3>
+            <p class="adr-body">Контекст: пиковая нагрузка 4k msg/s.<br>Решение: Kafka вместо RabbitMQ.<br>Последствия: +партиции, −простота.</p>
+            <p class="card-meta">решения · с обоснованием</p>
+          </article>
+
+          <article class="card tilt-c diagram" aria-label="Диаграмма архитектуры">
+            <div class="card-head">
+              <span class="card-title">arch-overview.svg</span>
+              <span class="win-dots" aria-hidden="true"><i></i><i></i><i></i></span>
+            </div>
+            <svg viewBox="0 0 300 96" role="img" aria-label="Web/App → API Gateway → Core Service → PostgreSQL">
+              <defs>
+                <marker id="arr" viewBox="0 0 8 8" refX="7" refY="4" markerWidth="7" markerHeight="7" orient="auto">
+                  <path d="M0,0 L8,4 L0,8 z" fill="#4A4459"/>
+                </marker>
+              </defs>
+              <rect class="box" x="2"   y="30" width="62" height="34"/>
+              <rect class="box" x="84"  y="30" width="62" height="34"/>
+              <rect class="box" x="166" y="30" width="62" height="34"/>
+              <rect class="box" x="248" y="30" width="50" height="34"/>
+              <line class="edge" x1="64"  y1="47" x2="82"  y2="47" marker-end="url(#arr)"/>
+              <line class="edge" x1="146" y1="47" x2="164" y2="47" marker-end="url(#arr)"/>
+              <line class="edge" x1="228" y1="47" x2="246" y2="47" marker-end="url(#arr)"/>
+              <text class="lbl" x="33"  y="51" text-anchor="middle">Web/App</text>
+              <text class="lbl" x="115" y="44" text-anchor="middle">API</text>
+              <text class="lbl" x="115" y="56" text-anchor="middle">Gateway</text>
+              <text class="lbl" x="197" y="44" text-anchor="middle">Core</text>
+              <text class="lbl" x="197" y="56" text-anchor="middle">Service</text>
+              <text class="lbl" x="273" y="44" text-anchor="middle">Postgre</text>
+              <text class="lbl" x="273" y="56" text-anchor="middle">SQL</text>
+            </svg>
+            <p class="card-meta">диаграммы · из реальных систем</p>
+          </article>
+
+          <article class="card tilt-d" aria-label="Пост из Telegram">
+            <div class="tg-head">
+              <span class="tg-avatar" aria-hidden="true">KS</span>
+              <span>
+                <span class="tg-name">Sachkov Inside</span><br>
+                <span class="tg-sub">private channel</span>
+              </span>
+            </div>
+            <p class="tg-text">Разбор продакшн-инцидента</p>
+            <p class="tg-meta">👁 342 · 💬 18 · ↗ 24</p>
+          </article>
+
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <section class="inside" aria-labelledby="inside-title">
+    <div class="wrap">
+      <p class="section-label">// АРТЕФАКТЫ, А НЕ КОНСПЕКТЫ</p>
+      <h2 id="inside-title">Что попадает внутрь</h2>
+
+      <div class="rows">
+        <div class="row" data-reveal>
+          <span class="row-idx" aria-hidden="true">01</span>
+          <h3 class="row-title">Архитектура</h3>
+          <p class="row-text">Проектирование систем, границы сервисов, контракты, <span class="chip">ADR</span>. Реальные диаграммы и обоснования решений.</p>
+        </div>
+        <div class="row" data-reveal>
+          <span class="row-idx" aria-hidden="true">02</span>
+          <h3 class="row-title">AI-агенты</h3>
+          <p class="row-text">Рабочие AI-воркфлоу, <span class="chip">промпты</span>, инструменты, оценка качества. Практика без воды.</p>
+        </div>
+        <div class="row" data-reveal>
+          <span class="row-idx" aria-hidden="true">03</span>
+          <h3 class="row-title">Production</h3>
+          <p class="row-text">Инфраструктура, наблюдаемость, отладка, деплой, <span class="chip">инциденты</span>. Как держим реальные системы в строю.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+
+</main>
+
+<footer>
+  <div class="wrap">
+    <p class="foot-line">ACCESS: PRIVATE INVITE ONLY</p>
+  </div>
+</footer>
+
+<script>
+(function () {
+  var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+  // breathing radial glow (skipped entirely under reduced motion)
+  if (!reduce) {
+    document.getElementById('heroGlow').classList.add('is-live');
+  }
+
+  if (reduce || !('IntersectionObserver' in window)) return;
+
+  // screens "power on" / rows lift on scroll: hide only via JS, reveal when visible
+  var targets = document.querySelectorAll('[data-reveal]');
+  targets.forEach(function (el) { el.classList.add('reveal-init'); });
+
+  var io = new IntersectionObserver(function (entries) {
+    entries.forEach(function (entry) {
+      if (entry.isIntersecting) {
+        entry.target.classList.add('revealed');
+        io.unobserve(entry.target);
+      }
+    });
+  }, { threshold: 0.2 });
+
+  targets.forEach(function (el) { io.observe(el); });
+})();
+</script>
+
+</body>
+</html>

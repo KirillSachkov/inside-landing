@@ -1,0 +1,678 @@
+<!-- Direction A — «Спецификация» (light engineering document / spec-sheet) — prototype for visual comparison, not production -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SACHKOV INSIDE — Спецификация</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Inter+Tight:wght@700;800&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F4F2EC;
+    --ink: #16130E;
+    --ink-soft: #4a453b;
+    --ink-faint: #8b857a;
+    --accent: #F26B1D;
+    --hairline: rgba(22, 19, 14, 0.16);
+    --hairline-strong: rgba(22, 19, 14, 0.32);
+    --white: #FFFFFF;
+    --font-head: 'Inter Tight', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    --gutter: clamp(20px, 5vw, 64px);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    background-color: var(--paper);
+    /* faint graph-paper grid */
+    background-image:
+      linear-gradient(to right, rgba(22, 19, 14, 0.045) 1px, transparent 1px),
+      linear-gradient(to bottom, rgba(22, 19, 14, 0.045) 1px, transparent 1px);
+    background-size: 28px 28px;
+    color: var(--ink);
+    font-family: var(--font-head);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent); color: var(--white); }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .mono { font-family: var(--font-mono); }
+
+  /* ---------- NAV ---------- */
+
+  header.site-nav {
+    border-bottom: 1px solid var(--hairline);
+    background: rgba(244, 242, 236, 0.92);
+  }
+
+  .nav-inner {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 24px;
+    padding-top: 18px;
+    padding-bottom: 18px;
+  }
+
+  .brand {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 14px;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .brand::before {
+    content: "";
+    width: 10px; height: 10px;
+    background: var(--accent);
+    display: inline-block;
+  }
+
+  nav.menu ul {
+    list-style: none;
+    display: flex;
+    gap: clamp(16px, 3vw, 40px);
+  }
+
+  nav.menu a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--ink-soft);
+    display: inline-flex;
+    gap: 8px;
+    align-items: baseline;
+    transition: color 160ms ease;
+  }
+  nav.menu a:hover { color: var(--accent); }
+  nav.menu a .num { color: var(--accent); font-size: 11px; }
+
+  /* ---------- HERO ---------- */
+
+  .hero {
+    padding-top: clamp(56px, 9vw, 120px);
+    padding-bottom: clamp(48px, 7vw, 88px);
+  }
+
+  .eyebrow {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+    margin-bottom: clamp(24px, 4vw, 40px);
+  }
+  .eyebrow::before {
+    content: "";
+    width: 9px; height: 9px;
+    background: var(--accent);
+    flex: none;
+  }
+
+  h1.hero-title {
+    font-weight: 800;
+    font-size: clamp(38px, 7.2vw, 96px);
+    line-height: 1.02;
+    letter-spacing: -0.03em;
+    text-transform: uppercase;
+    max-width: 14ch;
+  }
+
+  .marker {
+    position: relative;
+    white-space: nowrap;
+    z-index: 1;
+  }
+  .marker::before {
+    content: "";
+    position: absolute;
+    left: -0.08em; right: -0.08em;
+    top: 0.08em; bottom: 0.02em;
+    background: var(--accent);
+    z-index: -1;
+    transform-origin: left center;
+  }
+  .js .marker::before {
+    transform: scaleX(0);
+    animation: marker-in 640ms cubic-bezier(0.22, 1, 0.36, 1) 250ms forwards;
+  }
+  @keyframes marker-in {
+    to { transform: scaleX(1); }
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .marker::before { animation: none; transform: scaleX(1); }
+  }
+
+  .hero-sub {
+    margin-top: clamp(24px, 3.5vw, 36px);
+    max-width: 52ch;
+    font-size: clamp(16px, 1.6vw, 20px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 400;
+    letter-spacing: 0;
+  }
+
+  .cta-row {
+    margin-top: clamp(28px, 4vw, 44px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    padding: 16px 28px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid var(--ink);
+    transition: background 160ms ease, color 160ms ease, transform 160ms ease;
+  }
+  .btn-primary {
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+    font-weight: 600;
+  }
+  .btn-primary:hover { background: var(--ink); border-color: var(--ink); }
+  .btn-primary::after { content: "→"; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ink);
+  }
+  .btn-secondary:hover { background: var(--ink); color: var(--paper); }
+
+  /* ---------- SPEC STRIP ---------- */
+
+  .spec-strip {
+    border-top: 1px solid var(--hairline-strong);
+    border-bottom: 1px solid var(--hairline-strong);
+  }
+  .spec-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+  }
+  .spec-cell {
+    padding: 22px 20px 24px;
+    border-left: 1px solid var(--hairline);
+  }
+  .spec-cell:first-child { border-left: none; padding-left: 0; }
+  .spec-label {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 8px;
+  }
+  .spec-value {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    font-weight: 600;
+    letter-spacing: 0.04em;
+    color: var(--ink);
+  }
+
+  /* ---------- PROOF / ARTIFACTS ---------- */
+
+  .proof { padding: clamp(64px, 9vw, 120px) 0; }
+
+  .section-head {
+    display: flex;
+    align-items: baseline;
+    justify-content: space-between;
+    gap: 24px;
+    margin-bottom: clamp(32px, 5vw, 56px);
+    border-bottom: 1px solid var(--hairline-strong);
+    padding-bottom: 18px;
+  }
+  .section-head h2 {
+    font-weight: 800;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.02em;
+    text-transform: uppercase;
+  }
+  .section-head .meta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+
+  .cards {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    gap: 1px;
+    background: var(--hairline);
+    border: 1px solid var(--hairline);
+  }
+
+  .card {
+    background: var(--white);
+    padding: clamp(20px, 2.5vw, 32px);
+    min-height: 260px;
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 16px;
+  }
+
+  .card-top {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 12px;
+  }
+  .card-tag {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    display: flex;
+    align-items: center;
+    gap: 8px;
+  }
+  .card-tag::before {
+    content: "";
+    width: 7px; height: 7px;
+    background: var(--accent);
+    flex: none;
+  }
+  .card-title {
+    font-family: var(--font-mono);
+    font-size: 14px;
+    font-weight: 600;
+    letter-spacing: 0.02em;
+  }
+
+  .chip {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    font-weight: 600;
+    letter-spacing: 0.14em;
+    padding: 5px 10px;
+    border: 1px solid var(--accent);
+    color: var(--accent);
+    text-transform: uppercase;
+  }
+
+  /* code card */
+  .code-block {
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    line-height: 1.75;
+    background: #FBFAF6;
+    border: 1px solid var(--hairline);
+    padding: 16px 18px;
+    overflow-x: auto;
+    white-space: pre;
+    min-width: 0;
+    flex: 1;
+  }
+  .code-block .ln { color: #b9b2a4; user-select: none; display: inline-block; width: 2ch; margin-right: 14px; text-align: right; }
+  .tok-kw { color: #9c3d00; font-weight: 600; }
+  .tok-fn { color: #1d4ed8; }
+  .tok-str { color: #166534; }
+  .tok-cm { color: #8b857a; font-style: italic; }
+  .tok-num { color: #b45309; }
+
+  .card-body {
+    font-size: 15px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+  .card-meta {
+    margin-top: auto;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.06em;
+    color: var(--ink-faint);
+    border-top: 1px solid var(--hairline);
+    padding-top: 14px;
+  }
+
+  /* diagram card */
+  .diagram { flex: 1; display: flex; align-items: center; }
+  .diagram svg { width: 100%; height: auto; display: block; }
+
+  /* ---------- SIGNATURE (dark inversion) ---------- */
+
+  .inside {
+    background: var(--ink);
+    color: var(--paper);
+    padding: clamp(64px, 9vw, 120px) 0;
+  }
+  .inside .section-head { border-bottom-color: rgba(244, 242, 236, 0.28); }
+  .inside .section-head .meta { color: rgba(244, 242, 236, 0.5); }
+
+  .inside-cols {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: clamp(28px, 4vw, 56px);
+  }
+  .inside-col {
+    border-top: 1px solid rgba(244, 242, 236, 0.28);
+    padding-top: 24px;
+  }
+  .inside-col .num {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.14em;
+    color: var(--accent);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 14px;
+  }
+  .inside-col .num::before {
+    content: "";
+    width: 8px; height: 8px;
+    background: var(--accent);
+  }
+  .inside-col h3 {
+    font-size: clamp(20px, 2.2vw, 26px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+    margin-bottom: 12px;
+  }
+  .inside-col p {
+    font-size: 15px;
+    line-height: 1.6;
+    color: rgba(244, 242, 236, 0.72);
+  }
+
+  /* ---------- FOOTER STRIP ---------- */
+
+  footer.strip {
+    border-top: 1px solid var(--hairline-strong);
+    border-bottom: 1px solid var(--hairline-strong);
+    padding: 20px 0;
+    text-align: center;
+  }
+  footer.strip p {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.2em;
+    text-transform: uppercase;
+    color: var(--ink-soft);
+  }
+  footer.strip .dot { color: var(--accent); }
+
+  /* ---------- SCROLL REVEAL (JS-enhanced only) ---------- */
+
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal { opacity: 1; transform: none; transition: none; }
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+
+  @media (max-width: 720px) {
+    .nav-inner { flex-wrap: wrap; }
+    nav.menu ul { gap: 18px; }
+    nav.menu a { font-size: 11px; }
+    .spec-grid { grid-template-columns: repeat(2, 1fr); }
+    .spec-cell:nth-child(3) { border-left: none; padding-left: 0; }
+    .spec-cell:nth-child(n+3) { border-top: 1px solid var(--hairline); }
+    .cards { grid-template-columns: 1fr; }
+    .inside-cols { grid-template-columns: 1fr; }
+    .section-head { flex-direction: column; gap: 8px; }
+    .card { min-height: 0; }
+    .btn { padding: 14px 22px; font-size: 12px; }
+  }
+</style>
+</head>
+<body>
+
+<header class="site-nav">
+  <div class="wrap nav-inner">
+    <a class="brand" href="#">SACHKOV&nbsp;INSIDE</a>
+    <nav class="menu" aria-label="Основная навигация">
+      <ul>
+        <li><a href="#"><span class="num">01</span>Что внутри</a></li>
+        <li><a href="#"><span class="num">02</span>Формат</a></li>
+        <li><a href="#"><span class="num">03</span>Доступ</a></li>
+      </ul>
+    </nav>
+  </div>
+</header>
+
+<main>
+  <!-- HERO -->
+  <section class="hero">
+    <div class="wrap">
+      <p class="eyebrow">Private Engineering Access</p>
+      <h1 class="hero-title">Внутри <span class="marker">разработки</span>. До готового результата.</h1>
+      <p class="hero-sub">Реальные решения, архитектура, AI-агенты, production и рабочие артефакты — в приватном Telegram-канале.</p>
+      <div class="cta-row">
+        <a class="btn btn-primary" href="#">Получить доступ</a>
+        <a class="btn btn-secondary" href="#">Что внутри</a>
+      </div>
+    </div>
+  </section>
+
+  <!-- SPEC STRIP -->
+  <section class="spec-strip" aria-label="Параметры доступа">
+    <div class="wrap spec-grid">
+      <div class="spec-cell">
+        <p class="spec-label">Access Level</p>
+        <p class="spec-value">PRIVATE</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-label">Format</p>
+        <p class="spec-value">TELEGRAM CHANNEL</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-label">Update</p>
+        <p class="spec-value">WEEKLY</p>
+      </div>
+      <div class="spec-cell">
+        <p class="spec-label">Content</p>
+        <p class="spec-value">REAL WORK ONLY</p>
+      </div>
+    </div>
+  </section>
+
+  <!-- PROOF / ARTIFACTS -->
+  <section class="proof">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Что попадает внутрь</h2>
+        <p class="meta">Артефакты · выборка</p>
+      </div>
+
+      <div class="cards">
+        <!-- 1. Code card -->
+        <article class="card reveal">
+          <div class="card-top">
+            <p class="card-tag">Code</p>
+            <p class="card-title">service.ts</p>
+          </div>
+          <div class="code-block" aria-label="Фрагмент кода AgentService"><span class="ln">1</span><span class="tok-kw">export class</span> <span class="tok-fn">AgentService</span> {
+<span class="ln">2</span>  <span class="tok-kw">constructor</span>(<span class="tok-kw">private</span> ai: AiClient) {}
+<span class="ln">3</span>
+<span class="ln">4</span>  <span class="tok-kw">async</span> <span class="tok-fn">runTask</span>(input: <span class="tok-kw">string</span>) {
+<span class="ln">5</span>    <span class="tok-cm">// контекст + инструменты агента</span>
+<span class="ln">6</span>    <span class="tok-kw">const</span> ctx = <span class="tok-kw">await</span> <span class="tok-kw">this</span>.ai.<span class="tok-fn">complete</span>({
+<span class="ln">7</span>      model: <span class="tok-str">"gpt-5"</span>, temperature: <span class="tok-num">0.2</span>,
+<span class="ln">8</span>      messages: [{ role: <span class="tok-str">"user"</span>, content: input }],
+<span class="ln">9</span>    });
+<span class="ln">10</span>    <span class="tok-kw">return</span> ctx.choices[<span class="tok-num">0</span>].message;
+<span class="ln">11</span>  }
+<span class="ln">12</span>}</div>
+          <p class="card-meta">TypeScript · AI-агент · production-код</p>
+        </article>
+
+        <!-- 2. ADR card -->
+        <article class="card reveal">
+          <div class="card-top">
+            <p class="card-tag">ADR</p>
+            <span class="chip">Accepted</span>
+          </div>
+          <p class="card-title">ADR-021 · Выбор брокера сообщений</p>
+          <p class="card-body">Сравнили Kafka и RabbitMQ под нашу нагрузку: задержки, операционная сложность, стоимость владения. Зафиксировали решение и причины отказа от альтернатив.</p>
+          <p class="card-meta">Контекст · Решение · Последствия</p>
+        </article>
+
+        <!-- 3. Diagram card -->
+        <article class="card reveal">
+          <div class="card-top">
+            <p class="card-tag">Architecture</p>
+            <p class="card-title">Схема сервиса</p>
+          </div>
+          <div class="diagram">
+            <svg viewBox="0 0 560 200" role="img" aria-label="Диаграмма: Web/App → API Gateway → Core Service → PostgreSQL" xmlns="http://www.w3.org/2000/svg">
+              <defs>
+                <marker id="arr" viewBox="0 0 10 10" refX="9" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+                  <path d="M0,0 L10,5 L0,10 z" fill="#F26B1D"/>
+                </marker>
+              </defs>
+              <g font-family="'JetBrains Mono', monospace" font-size="11" fill="#16130E">
+                <!-- boxes -->
+                <rect x="8" y="70" width="104" height="52" fill="#FFFFFF" stroke="#16130E" stroke-width="1.2"/>
+                <text x="60" y="99" text-anchor="middle">Web/App</text>
+                <rect x="164" y="70" width="112" height="52" fill="#FFFFFF" stroke="#16130E" stroke-width="1.2"/>
+                <text x="220" y="93" text-anchor="middle">API</text>
+                <text x="220" y="107" text-anchor="middle">Gateway</text>
+                <rect x="328" y="70" width="112" height="52" fill="#FFFFFF" stroke="#16130E" stroke-width="1.2"/>
+                <text x="384" y="93" text-anchor="middle">Core</text>
+                <text x="384" y="107" text-anchor="middle">Service</text>
+                <rect x="492" y="70" width="60" height="52" fill="#FFFFFF" stroke="#16130E" stroke-width="1.2"/>
+                <text x="522" y="93" text-anchor="middle" font-size="9.5">Post-</text>
+                <text x="522" y="106" text-anchor="middle" font-size="9.5">greSQL</text>
+                <!-- arrows -->
+                <line x1="112" y1="96" x2="160" y2="96" stroke="#F26B1D" stroke-width="1.6" marker-end="url(#arr)"/>
+                <line x1="276" y1="96" x2="324" y2="96" stroke="#F26B1D" stroke-width="1.6" marker-end="url(#arr)"/>
+                <line x1="440" y1="96" x2="488" y2="96" stroke="#F26B1D" stroke-width="1.6" marker-end="url(#arr)"/>
+                <!-- labels -->
+                <text x="136" y="86" text-anchor="middle" font-size="8.5" fill="#8b857a">HTTP</text>
+                <text x="300" y="86" text-anchor="middle" font-size="8.5" fill="#8b857a">gRPC</text>
+                <text x="464" y="86" text-anchor="middle" font-size="8.5" fill="#8b857a">SQL</text>
+              </g>
+            </svg>
+          </div>
+          <p class="card-meta">Web/App → API Gateway → Core Service → PostgreSQL</p>
+        </article>
+
+        <!-- 4. Telegram post card -->
+        <article class="card reveal">
+          <div class="card-top">
+            <p class="card-tag">Telegram</p>
+            <p class="card-title">Разбор продакшн-инцидента</p>
+          </div>
+          <p class="card-body">Очередь сообщений деградировала под пиковой нагрузкой. Разбираем таймлайн, метрики, что чинили в первую очередь и какие выводы внесли в runbook.</p>
+          <p class="card-meta">👁 342 · 💬 18 · ↗ 24</p>
+        </article>
+      </div>
+    </div>
+  </section>
+
+  <!-- SIGNATURE: DARK INVERSION -->
+  <section class="inside">
+    <div class="wrap">
+      <div class="section-head">
+        <h2>Что попадает внутрь</h2>
+        <p class="meta">Направления · 03</p>
+      </div>
+      <div class="inside-cols">
+        <div class="inside-col reveal">
+          <p class="num">01</p>
+          <h3>Архитектура</h3>
+          <p>Проектирование систем, границы сервисов, контракты, ADR. Реальные диаграммы и обоснования решений.</p>
+        </div>
+        <div class="inside-col reveal">
+          <p class="num">02</p>
+          <h3>AI-агенты</h3>
+          <p>Рабочие AI-воркфлоу, промпты, инструменты, оценка качества. Практика без воды.</p>
+        </div>
+        <div class="inside-col reveal">
+          <p class="num">03</p>
+          <h3>Production</h3>
+          <p>Инфраструктура, наблюдаемость, отладка, деплой, инциденты. Как держим реальные системы в строю.</p>
+        </div>
+      </div>
+    </div>
+  </section>
+</main>
+
+<footer class="strip">
+  <div class="wrap">
+    <p>Access: Private Invite Only <span class="dot">·</span> Telegram-First <span class="dot">·</span> Weekly</p>
+  </div>
+</footer>
+
+<script>
+  (function () {
+    document.documentElement.classList.add('js');
+    document.body.classList.add('js');
+
+    var targets = document.querySelectorAll('.reveal');
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    if (reduce || !('IntersectionObserver' in window)) {
+      // No animation available or wanted: show everything immediately.
+      targets.forEach(function (el) { el.classList.add('is-visible'); });
+      return;
+    }
+    var io = new IntersectionObserver(function (entries) {
+      entries.forEach(function (entry) {
+        if (entry.isIntersecting) {
+          entry.target.classList.add('is-visible');
+          io.unobserve(entry.target);
+        }
+      });
+    }, { threshold: 0.12 });
+
+    targets.forEach(function (el) { io.observe(el); });
+  })();
+</script>
+</body>
+</html>

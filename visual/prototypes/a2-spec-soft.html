@@ -1,0 +1,1992 @@
+<!-- Direction A2 — Спецификация, мягкая + глитч — prototype for visual comparison, not production -->
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>Sachkov Inside - приватный канал по production-разработке и AI-first</title>
+<meta name="description" content="Реальные решения и опыт, архитектура проектов, AI-first разработка с агентами, разбор production кейсов и сообщество. Приватный Telegram-канал Кирилла Сачкова.">
+<meta property="og:type" content="website">
+<meta property="og:title" content="Sachkov Inside - приватный канал по production-разработке и AI-first">
+<meta property="og:description" content="Реальные решения и опыт, архитектура проектов, AI-first разработка с агентами, разбор production кейсов и сообщество. Приватный Telegram-канал Кирилла Сачкова.">
+<meta property="og:image" content="assets/og.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="icon" type="image/svg+xml" href="assets/favicon.svg">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --paper: #F6F4EF;
+    --ink: #16130E;
+    --ink-soft: #4a453b;
+    --ink-faint: #8b857a;
+    --accent: #F26B1D;
+    --teal: #2A9D8F;
+    --hairline: rgba(22, 19, 14, 0.12);
+    --white: #FFFFFF;
+    --font-head: 'Space Grotesk', 'Helvetica Neue', Arial, sans-serif;
+    --font-mono: 'JetBrains Mono', 'SF Mono', Menlo, Consolas, monospace;
+    --gutter: clamp(20px, 5vw, 64px);
+    --shadow-card: 0 1px 2px rgba(22,19,14,.04), 0 12px 32px rgba(22,19,14,.07);
+    --shadow-card-hover: 0 2px 4px rgba(22,19,14,.05), 0 24px 48px rgba(22,19,14,.12);
+  }
+
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+
+  html { scroll-behavior: smooth; }
+  @media (prefers-reduced-motion: reduce) {
+    html { scroll-behavior: auto; }
+  }
+
+  body {
+    background-color: var(--paper);
+    color: var(--ink);
+    font-family: var(--font-head);
+    -webkit-font-smoothing: antialiased;
+    overflow-x: hidden;
+  }
+
+  ::selection { background: var(--accent); color: var(--white); }
+
+  a { color: inherit; }
+
+  :focus-visible {
+    outline: 2px solid var(--accent);
+    outline-offset: 3px;
+  }
+
+  /* ---------- DOT-GRID CANVAS LAYER ---------- */
+
+  #dotgrid {
+    position: fixed;
+    inset: 0;
+    z-index: 0;
+    pointer-events: none;
+    display: block;
+  }
+
+  .page { position: relative; z-index: 1; }
+
+  .wrap {
+    max-width: 1200px;
+    margin: 0 auto;
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+
+  .mono { font-family: var(--font-mono); }
+
+  /* ---------- NAV (floating pill) ---------- */
+
+  .nav-wrap {
+    position: fixed;
+    top: calc(16px + env(safe-area-inset-top, 0px));
+    left: 0;
+    right: 0;
+    z-index: 100;
+    display: flex;
+    justify-content: center;
+    padding: 0 12px;
+  }
+
+  .nav-pill {
+    width: 100%;
+    max-width: 58rem;
+    background: rgba(246, 244, 239, 0.82);
+    backdrop-filter: blur(12px);
+    -webkit-backdrop-filter: blur(12px);
+    border: 1px solid rgba(22, 19, 14, 0.09);
+    border-radius: 999px;
+    box-shadow: 0 8px 32px rgba(22, 19, 14, 0.08);
+    padding: 10px 22px;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    flex-wrap: nowrap;
+    gap: 16px;
+  }
+
+  .brand {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 13px;
+    letter-spacing: 0.12em;
+    text-decoration: none;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .brand::before {
+    content: "";
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: var(--accent);
+    display: inline-block;
+    flex: none;
+  }
+
+  nav.menu ul {
+    list-style: none;
+    display: flex;
+    gap: clamp(10px, 1.6vw, 22px);
+  }
+
+  nav.menu a {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    color: var(--ink-soft);
+    display: inline-flex;
+    gap: 8px;
+    align-items: baseline;
+    transition: color 160ms ease;
+  }
+  nav.menu a:hover { color: var(--accent); }
+  nav.menu a .num { color: var(--accent); font-size: 10.5px; }
+
+  .nav-cta {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    font-weight: 600;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 9px 18px;
+    border-radius: 999px;
+    background: var(--accent);
+    color: var(--white);
+    box-shadow: 0 6px 18px rgba(242, 107, 29, 0.25);
+    transition: transform 180ms ease, box-shadow 180ms ease;
+  }
+  .nav-cta:hover {
+    transform: translateY(-1px);
+    box-shadow: 0 8px 22px rgba(242, 107, 29, 0.4);
+  }
+
+  /* right side group: CTA + burger */
+  .nav-side {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    flex: none;
+  }
+
+  /* burger (visible < 1024px) */
+  .nav-burger {
+    display: none;
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    border: none;
+    background: transparent;
+    color: var(--ink);
+    cursor: pointer;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    gap: 6px;
+    transition: background 180ms ease;
+  }
+  .nav-burger:hover { background: rgba(255, 255, 255, 0.65); }
+  .nav-burger span {
+    width: 18px;
+    height: 2px;
+    border-radius: 2px;
+    background: currentColor;
+    transition: transform 220ms ease;
+  }
+  .nav-burger.open span:nth-child(1) { transform: translateY(4px) rotate(45deg); }
+  .nav-burger.open span:nth-child(2) { transform: translateY(-4px) rotate(-45deg); }
+
+  /* fullscreen mobile menu overlay (sits under the pill so the burger/× stays reachable) */
+  .nav-overlay {
+    position: fixed;
+    inset: 0;
+    z-index: 90;
+    background: rgba(246, 244, 239, 0.92);
+    backdrop-filter: blur(14px);
+    -webkit-backdrop-filter: blur(14px);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: calc(24px + env(safe-area-inset-top, 0px)) 24px calc(24px + env(safe-area-inset-bottom, 0px));
+    opacity: 0;
+    visibility: hidden;
+    transition: opacity 240ms ease, visibility 0s linear 240ms;
+  }
+  .nav-overlay.open {
+    opacity: 1;
+    visibility: visible;
+    transition: opacity 240ms ease;
+  }
+  .nav-overlay nav ul {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: clamp(16px, 3.5vh, 26px);
+  }
+  .nav-overlay nav a {
+    font-size: clamp(26px, 6vw, 34px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+    text-decoration: none;
+    color: var(--ink);
+    display: inline-flex;
+    align-items: baseline;
+    gap: 12px;
+    transition: color 160ms ease;
+  }
+  .nav-overlay nav a .num {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    color: var(--accent);
+  }
+  .nav-overlay nav a:hover { color: var(--accent); }
+  .nav-overlay .nav-overlay-cta { margin-top: clamp(30px, 6vh, 48px); }
+
+  /* item entrance stagger */
+  .nav-overlay li,
+  .nav-overlay .nav-overlay-cta {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 260ms ease, transform 260ms ease;
+  }
+  .nav-overlay.open li,
+  .nav-overlay.open .nav-overlay-cta { opacity: 1; transform: none; }
+  .nav-overlay.open li:nth-child(1) { transition-delay: 50ms; }
+  .nav-overlay.open li:nth-child(2) { transition-delay: 100ms; }
+  .nav-overlay.open li:nth-child(3) { transition-delay: 150ms; }
+  .nav-overlay.open li:nth-child(4) { transition-delay: 200ms; }
+  .nav-overlay.open li:nth-child(5) { transition-delay: 250ms; }
+  .nav-overlay.open .nav-overlay-cta { transition-delay: 300ms; }
+
+  /* ---------- HERO ---------- */
+
+  .hero {
+    padding-top: clamp(120px, 16vw, 176px);
+    padding-bottom: clamp(48px, 7vw, 88px);
+    scroll-margin-top: 96px;
+  }
+
+  .hero-grid {
+    display: grid;
+    gap: clamp(32px, 5vw, 64px);
+    align-items: center;
+  }
+  @media (min-width: 700px) {
+    .hero-grid { grid-template-columns: minmax(0, 1.25fr) minmax(200px, 0.75fr); }
+  }
+  @media (min-width: 1000px) {
+    .hero-grid { grid-template-columns: minmax(0, 1.1fr) minmax(240px, 0.9fr); }
+  }
+
+  .hero-text { min-width: 0; }
+
+  /* ---------- HERO 3D OBJECT ---------- */
+
+  .hero-object {
+    position: relative;
+    width: min(70vw, 340px);
+    margin: clamp(16px, 4vw, 32px) auto 0;
+  }
+  @media (min-width: 700px) {
+    .hero-object {
+      width: 100%;
+      max-width: 460px;
+      margin: 0;
+      justify-self: end;
+    }
+  }
+  .hero-object img {
+    display: block;
+    width: 100%;
+    height: auto;
+    position: relative;
+    z-index: 1;
+  }
+
+  .hero-float { animation: hero-float 6s ease-in-out infinite; }
+  @keyframes hero-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-10px); }
+  }
+
+  /* tiny jitter synced with the H1 glitch word (same 7s cycle, bursts at 42-45% / 92-95%) */
+  .hero-jitter { animation: object-jitter 7s linear infinite; }
+  @keyframes object-jitter {
+    0%, 42%    { transform: translate(0) skewX(0); }
+    42.1%      { transform: translate(-2px, 1px) skewX(1.2deg); }
+    43%        { transform: translate(2px, -1px) skewX(-1deg); }
+    44%        { transform: translate(-1px, 1px); }
+    45%, 92%   { transform: translate(0) skewX(0); }
+    92.1%      { transform: translate(2px, 1px) skewX(-1.2deg); }
+    93%        { transform: translate(-2px, -1px) skewX(1deg); }
+    95%, 100%  { transform: translate(0) skewX(0); }
+  }
+
+  /* warm orange glow behind the screen area */
+  .hero-glow {
+    position: absolute;
+    top: 4%;
+    left: 50%;
+    width: 75%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(242, 107, 29, 0.32), transparent 65%);
+    filter: blur(40px);
+    z-index: 0;
+    pointer-events: none;
+  }
+
+  /* soft contact shadow, scales in counter-phase with the float */
+  .hero-shadow {
+    position: absolute;
+    left: 14%;
+    right: 14%;
+    bottom: 1%;
+    height: 9%;
+    background: radial-gradient(ellipse, rgba(22, 19, 14, 0.3), transparent 70%);
+    filter: blur(10px);
+    z-index: 0;
+    pointer-events: none;
+    animation: hero-shadow 6s ease-in-out infinite;
+  }
+  @keyframes hero-shadow {
+    0%, 100% { transform: scaleX(1); opacity: 1; }
+    50%      { transform: scaleX(0.84); opacity: 0.6; }
+  }
+
+  h1.hero-title {
+    font-weight: 700;
+    font-size: clamp(30px, 8.4vw, 60px);
+    line-height: 1.08;
+    letter-spacing: -0.03em;
+  }
+  @media (min-width: 700px) {
+    h1.hero-title { font-size: clamp(30px, 4.4vw, 52px); }
+  }
+  .hero-title .h1-line { display: block; white-space: nowrap; }
+
+  /* ---------- GLITCH on «Software Engineer» (port of Quordix technique, retuned palette) ---------- */
+
+  .glitch {
+    position: relative;
+    display: inline-block;
+    white-space: nowrap;
+    color: var(--ink);
+    animation: glitch-color 7s infinite step-end;
+  }
+  .glitch::before,
+  .glitch::after {
+    content: attr(data-text);
+    position: absolute;
+    top: 0; left: 0;
+    width: 100%; height: 100%;
+    opacity: 0;
+    background: var(--paper); /* match page bg so slices mask the word cleanly */
+  }
+  .glitch::before { animation: glitch-a 7s infinite linear; z-index: 2; }
+  .glitch::after  { animation: glitch-b 7s infinite linear; z-index: 3; }
+
+  @keyframes glitch-color {
+    0%,  42%      { color: var(--ink);    text-shadow: none; }
+    42.1%, 44.9%  { color: var(--ink);    text-shadow: -2px 0 var(--accent), 2px 0 var(--teal); }
+    45%, 92%      { color: var(--accent); text-shadow: none; }
+    92.1%, 94.9%  { color: var(--accent); text-shadow: -2px 0 var(--ink), 2px 0 var(--teal); }
+    95%, 100%     { color: var(--ink);    text-shadow: none; }
+  }
+
+  @keyframes glitch-a {
+    0%,   42%  { opacity: 0; transform: translate(0); }
+    42.1%      { opacity: 1; color: var(--accent); clip-path: polygon(0 0,100% 0,100% 45%,0 45%); transform: translate(-8px,-4px) skewX(12deg); }
+    43%        { color: var(--teal); transform: translate(8px,4px) skewX(-12deg); clip-path: polygon(0 10%,100% 0,100% 30%,0 35%); }
+    44%        { color: var(--ink); transform: translate(-8px,4px); clip-path: polygon(0 40%,100% 50%,100% 80%,0 90%); }
+    45%        { opacity: 0; }
+    45.1%, 92% { opacity: 0; transform: translate(0); }
+    92.1%      { opacity: 1; color: var(--teal); clip-path: polygon(0 60%,100% 55%,100% 100%,0 100%); transform: translate(8px,-4px) skewX(8deg); }
+    93%        { color: var(--accent); transform: translate(-5px,4px) skewX(-8deg); clip-path: polygon(0 20%,100% 20%,100% 100%,0 80%); }
+    95%        { opacity: 0; }
+  }
+  @keyframes glitch-b {
+    0%,   42%  { opacity: 0; transform: translate(0); }
+    42.1%      { opacity: 1; color: var(--ink); clip-path: polygon(0 55%,100% 55%,100% 100%,0 100%); transform: translate(8px,4px); }
+    43%        { color: var(--teal); transform: translate(-8px,-4px) skewX(8deg); clip-path: polygon(0 20%,100% 20%,100% 100%,0 80%); }
+    45%        { opacity: 0; }
+    45.1%, 92% { opacity: 0; transform: translate(0); }
+    92.1%      { opacity: 1; color: var(--accent); clip-path: polygon(0 0,100% 0,100% 45%,0 45%); transform: translate(-8px,-4px); }
+    93%        { color: var(--ink); transform: translate(8px,4px) skewX(-12deg); clip-path: polygon(0 10%,100% 0,100% 30%,0 35%); }
+    95%        { opacity: 0; }
+  }
+
+  .hero-sub {
+    margin-top: clamp(24px, 3.5vw, 36px);
+    max-width: 52ch;
+    font-size: clamp(16px, 1.6vw, 20px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+    font-weight: 400;
+  }
+
+  .cta-row {
+    margin-top: clamp(28px, 4vw, 44px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 14px;
+  }
+
+  .btn {
+    font-family: var(--font-mono);
+    font-size: 13px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    text-decoration: none;
+    white-space: nowrap;
+    padding: 16px 30px;
+    border-radius: 999px;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    border: 1px solid transparent;
+    transition: background 180ms ease, color 180ms ease, transform 180ms ease, box-shadow 180ms ease, border-color 180ms ease;
+  }
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    font-weight: 600;
+    box-shadow: 0 10px 30px rgba(242, 107, 29, 0.25);
+  }
+  .btn-primary:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 14px 36px rgba(242, 107, 29, 0.4);
+  }
+  .btn-primary::after { content: "→"; }
+  .btn-secondary {
+    background: rgba(255, 255, 255, 0.55);
+    border-color: rgba(22, 19, 14, 0.2);
+    color: var(--ink);
+  }
+  .btn-secondary:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+    transform: translateY(-2px);
+  }
+
+  /* ---------- BENTO «ЧТО ВНУТРИ» (dark panel) ---------- */
+
+  .bento-sec { padding: clamp(32px, 5vw, 64px) 0; scroll-margin-top: 80px; }
+
+  .bento-band {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 30px;
+    box-shadow: 0 2px 6px rgba(22, 19, 14, 0.18), 0 32px 80px rgba(22, 19, 14, 0.32);
+    padding: clamp(28px, 4.5vw, 56px);
+  }
+
+  .bento-band h2 {
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.02em;
+  }
+
+  .bento-grid {
+    margin-top: clamp(28px, 4vw, 44px);
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-auto-flow: dense;
+    gap: clamp(14px, 1.8vw, 20px);
+  }
+  @media (min-width: 700px) {
+    .bento-grid { grid-template-columns: repeat(2, 1fr); }
+    .t-practice, .t-community { grid-column: span 2; }
+  }
+  @media (min-width: 1000px) {
+    .bento-grid { grid-template-columns: repeat(6, 1fr); }
+    .t-prod { grid-column: span 3; }
+    .t-ai { grid-column: span 3; }
+    .t-arch { grid-column: span 2; }
+    .t-career { grid-column: span 2; }
+    .t-community { grid-column: span 2; }
+    .t-practice { grid-column: span 6; }
+  }
+
+  .tile {
+    background: rgba(246, 244, 239, 0.04);
+    border: 1px solid rgba(246, 244, 239, 0.08);
+    border-radius: 20px;
+    padding: clamp(18px, 2.2vw, 26px);
+    min-width: 0;
+    display: flex;
+    flex-direction: column;
+    gap: 14px;
+    transition: transform 220ms ease, border-color 220ms ease, background 220ms ease;
+  }
+  .tile:hover {
+    transform: translateY(-3px);
+    border-color: rgba(246, 244, 239, 0.16);
+    background: rgba(246, 244, 239, 0.06);
+  }
+
+  .tile h3 {
+    font-size: clamp(17px, 1.7vw, 20px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .tile-desc {
+    font-size: clamp(15.5px, 1.25vw, 17.5px);
+    line-height: 1.55;
+    color: rgba(246, 244, 239, 0.55);
+  }
+  .tile-artifact { margin-top: auto; min-width: 0; }
+
+  /* production tile: 3D object (compact variant of the hero object) */
+  .tile-obj {
+    position: relative;
+    display: flex;
+    justify-content: center;
+    align-items: flex-end;
+    padding-top: 8px;
+  }
+  .tile-float { position: relative; animation: tile-float 6s ease-in-out infinite; }
+  @keyframes tile-float {
+    0%, 100% { transform: translateY(0); }
+    50%      { transform: translateY(-6px); }
+  }
+  .tile-obj img {
+    display: block;
+    width: auto;
+    max-width: 100%;
+    height: auto;
+    max-height: 150px;
+    object-fit: contain;
+    position: relative;
+    z-index: 1;
+    transition: transform 220ms ease;
+  }
+  @media (min-width: 700px) {
+    .tile-obj img { max-height: 200px; }
+  }
+  .tile:hover .tile-obj img { transform: translateY(-4px); }
+  .tile-glow {
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 80%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(242, 107, 29, 0.22), transparent 65%);
+    filter: blur(28px);
+    opacity: 0.8;
+    transition: opacity 220ms ease;
+    z-index: 0;
+    pointer-events: none;
+  }
+  .tile:hover .tile-glow { opacity: 1; }
+  .tile-obj-shadow {
+    position: absolute;
+    left: 22%;
+    right: 22%;
+    bottom: 0;
+    height: 14px;
+    background: radial-gradient(ellipse, rgba(0, 0, 0, 0.5), transparent 70%);
+    filter: blur(6px);
+    pointer-events: none;
+    animation: tile-shadow 6s ease-in-out infinite;
+  }
+  @keyframes tile-shadow {
+    0%, 100% { transform: scaleX(1); opacity: 1; }
+    50%      { transform: scaleX(0.85); opacity: 0.6; }
+  }
+
+  /* wide practice tile: text left, object right; object can be larger */
+  @media (min-width: 700px) {
+    .t-practice { flex-direction: row; align-items: center; gap: clamp(20px, 3vw, 40px); }
+    .t-practice .tile-text { flex: 1 1 42%; min-width: 220px; }
+    .t-practice .tile-artifact { flex: 1 1 50%; margin-top: 0; }
+  }
+  .tile-text { display: flex; flex-direction: column; gap: 14px; min-width: 0; }
+  .t-practice .tile-obj img { max-height: 180px; }
+  @media (min-width: 700px) {
+    .t-practice .tile-obj img { max-height: 250px; }
+  }
+
+  /* ---------- PIPELINE «От проектирования до релиза» (light) ---------- */
+
+  .pipeline { padding: clamp(56px, 8vw, 104px) 0 clamp(24px, 4vw, 48px); scroll-margin-top: 80px; }
+
+  .pipeline-head { max-width: 56ch; margin-bottom: clamp(32px, 5vw, 52px); }
+  .pipeline-head h2 {
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+  }
+  .pipeline-lead {
+    margin-top: 14px;
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.55;
+    color: var(--ink-soft);
+  }
+
+  .pipeline-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(24px, 4vw, 56px);
+    align-items: start;
+  }
+  @media (min-width: 900px) {
+    .pipeline-grid { grid-template-columns: minmax(0, 0.9fr) minmax(0, 1.1fr); align-items: center; }
+  }
+
+  /* CI/CD terminal window */
+  .term-window {
+    background: #1b1712;
+    border: 1px solid rgba(246, 244, 239, 0.1);
+    border-radius: 20px;
+    box-shadow: 0 2px 6px rgba(22, 19, 14, 0.16), 0 24px 60px rgba(22, 19, 14, 0.24);
+    overflow: hidden;
+  }
+  .term-bar {
+    display: flex;
+    align-items: center;
+    gap: 7px;
+    padding: 13px 16px;
+    border-bottom: 1px solid rgba(246, 244, 239, 0.08);
+  }
+  .term-dot {
+    width: 10px; height: 10px;
+    border-radius: 50%;
+    background: rgba(246, 244, 239, 0.22);
+    flex: none;
+  }
+  .term-dot--accent { background: var(--accent); }
+  .term-title {
+    margin-left: 8px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: rgba(246, 244, 239, 0.45);
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+  .term-body {
+    padding: 18px clamp(16px, 2.4vw, 24px) 20px;
+    font-family: var(--font-mono);
+    font-size: 13px;
+    line-height: 2.05;
+    color: rgba(246, 244, 239, 0.85);
+  }
+  .term-line {
+    display: flex;
+    align-items: baseline;
+    gap: 9px;
+    white-space: nowrap;
+    overflow: hidden;
+  }
+  .term-dollar { color: var(--teal); }
+  .term-check { color: var(--accent); }
+  .term-num { color: rgba(246, 244, 239, 0.38); }
+  .term-time {
+    margin-left: auto;
+    font-size: 10.5px;
+    letter-spacing: 0.06em;
+    color: rgba(246, 244, 239, 0.32);
+  }
+  @media (max-width: 520px) {
+    .term-time { display: none; }
+  }
+  .term-final { margin-top: 8px; }
+  .term-cursor {
+    color: var(--accent);
+    animation: term-blink 1.1s steps(1) infinite;
+  }
+  @keyframes term-blink {
+    0%, 55% { opacity: 1; }
+    56%, 100% { opacity: 0; }
+  }
+
+  /* staged line entrance, played once when the section scrolls into view */
+  .js .term-window .term-line { opacity: 0; transform: translateY(6px); }
+  .js .term-window.term-play .term-line { animation: term-in 420ms ease forwards; }
+  .js .term-window.term-play .term-line:nth-child(1) { animation-delay: 0ms; }
+  .js .term-window.term-play .term-line:nth-child(2) { animation-delay: 350ms; }
+  .js .term-window.term-play .term-line:nth-child(3) { animation-delay: 700ms; }
+  .js .term-window.term-play .term-line:nth-child(4) { animation-delay: 1050ms; }
+  .js .term-window.term-play .term-line:nth-child(5) { animation-delay: 1400ms; }
+  .js .term-window.term-play .term-line:nth-child(6) { animation-delay: 1750ms; }
+  .js .term-window.term-play .term-line:nth-child(7) { animation-delay: 2100ms; }
+  @keyframes term-in {
+    to { opacity: 1; transform: translateY(0); }
+  }
+
+  /* perks */
+  .perks {
+    display: flex;
+    flex-direction: column;
+    gap: clamp(18px, 2.4vw, 26px);
+    min-width: 0;
+  }
+  .perk h3 {
+    font-size: 16.5px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+  .perk h3::before {
+    content: "";
+    width: 9px; height: 9px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+  .perk--teal h3::before { background: var(--teal); }
+  .perk p {
+    font-size: 14.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    padding-left: 19px;
+  }
+
+  /* stack chips */
+  .stack {
+    list-style: none;
+    margin-top: clamp(32px, 5vw, 52px);
+    display: flex;
+    flex-wrap: wrap;
+    gap: 10px;
+  }
+  .stack li {
+    font-family: var(--font-mono);
+    font-size: 11.5px;
+    font-weight: 500;
+    letter-spacing: 0.06em;
+    color: var(--ink);
+    background: var(--white);
+    border: 1px solid rgba(22, 19, 14, 0.18);
+    border-radius: 999px;
+    padding: 8px 14px;
+  }
+  .stack li.stack-teal { border-color: rgba(42, 157, 143, 0.55); color: var(--teal); }
+  .stack li .hl { color: var(--accent); font-weight: 700; }
+
+  /* ---------- AUTHOR «КТО ВЕДЁТ КАНАЛ» ---------- */
+
+  .author { padding: clamp(40px, 6vw, 80px) 0 clamp(56px, 8vw, 104px); scroll-margin-top: 80px; }
+
+  .author-head { max-width: 56ch; margin-bottom: clamp(32px, 5vw, 52px); }
+  .author-head h2 {
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+  }
+
+  .author-card {
+    display: grid;
+    grid-template-columns: 1fr;
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 24px;
+    box-shadow: var(--shadow-card);
+    overflow: hidden;
+  }
+
+  .author-photo {
+    display: flex;
+    align-items: flex-end;
+    justify-content: center;
+    background:
+      radial-gradient(90% 70% at 50% 100%, rgba(242, 107, 29, 0.18), transparent 70%),
+      linear-gradient(160deg, #efede6 0%, #f6ede2 100%);
+    height: clamp(300px, 50vw, 420px);
+    padding: 24px clamp(28px, 5vw, 44px) 0;
+  }
+  .author-photo picture { display: contents; }
+  .author-photo img {
+    display: block;
+    width: auto;
+    height: 100%;
+    max-width: 100%;
+  }
+
+  .author-body { padding: clamp(28px, 4.5vw, 52px); min-width: 0; }
+  .author-name {
+    font-size: clamp(26px, 3.2vw, 38px);
+    font-weight: 700;
+    letter-spacing: -0.02em;
+  }
+  .author-facts {
+    margin-top: 10px;
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.06em;
+    color: var(--accent);
+  }
+  .author-text {
+    margin-top: 18px;
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+    max-width: 58ch;
+  }
+
+  .author-stats {
+    display: flex;
+    flex-wrap: wrap;
+    gap: clamp(20px, 4vw, 44px);
+    margin-top: 26px;
+    padding-top: 22px;
+    border-top: 1px solid var(--hairline);
+  }
+  .author-stats dt {
+    font-family: var(--font-mono);
+    font-size: 10px;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+    margin-bottom: 6px;
+  }
+  .author-stats dd {
+    font-size: 20px;
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    text-transform: uppercase;
+  }
+
+  .author-cta {
+    margin-top: 30px;
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    gap: 18px;
+  }
+  .author-social { display: flex; gap: 10px; }
+  .author-social a {
+    width: 44px;
+    height: 44px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    background: rgba(246, 244, 239, 0.7);
+    border: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    transition: background 180ms ease, color 180ms ease, transform 180ms ease, border-color 180ms ease;
+  }
+  .author-social a:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+    transform: translateY(-2px);
+  }
+  .author-social svg { width: 20px; height: 20px; fill: currentColor; }
+
+  @media (min-width: 960px) {
+    .author-card { grid-template-columns: minmax(0, 2fr) minmax(0, 3fr); }
+    .author-photo { height: auto; padding-top: clamp(28px, 5vw, 44px); }
+    .author-photo img { width: 100%; max-width: 400px; height: auto; }
+  }
+
+  /* ---------- AUDIENCE FIT «КОМУ ЭТО ПОДХОДИТ» ---------- */
+
+  .fit { padding-bottom: clamp(56px, 8vw, 104px); scroll-margin-top: 80px; }
+
+  .fit-head { max-width: 56ch; margin-bottom: clamp(32px, 5vw, 52px); }
+  .fit-head h2 {
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+  }
+
+  .fit-grid {
+    display: grid;
+    grid-template-columns: 1fr;
+    gap: clamp(18px, 3vw, 28px);
+  }
+
+  .fit-card {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 24px;
+    box-shadow: var(--shadow-card);
+    padding: clamp(26px, 4vw, 42px);
+  }
+  .fit-card h3 {
+    font-size: clamp(19px, 2vw, 22px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+    margin-bottom: clamp(18px, 2.5vw, 26px);
+  }
+
+  .fit-list {
+    list-style: none;
+    display: flex;
+    flex-direction: column;
+    gap: clamp(14px, 2vw, 18px);
+  }
+  .fit-list li {
+    display: flex;
+    align-items: flex-start;
+    gap: 14px;
+  }
+  .fit-list p {
+    font-size: 15.5px;
+    line-height: 1.55;
+    color: var(--ink-soft);
+    padding-top: 1px;
+  }
+
+  .fit-ico {
+    flex: none;
+    width: 26px;
+    height: 26px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+  }
+  .fit-ico svg { width: 14px; height: 14px; fill: currentColor; }
+  .fit-ico--yes { background: rgba(242, 107, 29, 0.12); color: var(--accent); }
+  .fit-ico--no { background: rgba(22, 19, 14, 0.06); color: var(--ink-faint); }
+
+  @media (min-width: 900px) {
+    .fit-grid { grid-template-columns: minmax(0, 1.15fr) minmax(0, 0.85fr); align-items: start; }
+  }
+
+  /* ---------- SECTION EXIT CTA (quiet link to the Tribute payment page) ---------- */
+
+  .sec-cta {
+    margin-top: clamp(32px, 5vw, 48px);
+    text-align: center;
+  }
+  .sec-cta a {
+    font-family: var(--font-mono);
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    text-transform: uppercase;
+    text-decoration: none;
+    color: var(--accent);
+    display: inline-flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px 2px;
+    border-bottom: 1px solid rgba(242, 107, 29, 0.35);
+    transition: border-color 180ms ease;
+  }
+  .sec-cta a::after {
+    content: "→";
+    transition: transform 180ms ease;
+  }
+  .sec-cta a:hover { border-color: var(--accent); }
+  .sec-cta a:hover::after { transform: translateX(4px); }
+
+  /* dark bento band variant: lighter orange for contrast */
+  .sec-cta--dark a { color: #ff8f4d; border-bottom-color: rgba(255, 143, 77, 0.4); }
+  .sec-cta--dark a:hover { border-color: #ff8f4d; }
+
+  /* ---------- FAQ «ВОПРОСЫ И ОТВЕТЫ» (accordion) ---------- */
+
+  .faq { padding-bottom: clamp(56px, 8vw, 104px); scroll-margin-top: 80px; }
+
+  .faq-head { max-width: 56ch; margin-bottom: clamp(32px, 5vw, 52px); }
+  .faq-head h2 {
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 44px);
+    letter-spacing: -0.02em;
+  }
+
+  .faq-list {
+    display: flex;
+    flex-direction: column;
+    gap: 12px;
+    max-width: 860px;
+  }
+
+  .faq-item {
+    background: var(--white);
+    border: 1px solid var(--hairline);
+    border-radius: 18px;
+    box-shadow: var(--shadow-card);
+  }
+
+  .faq-q {
+    width: 100%;
+    display: flex;
+    align-items: center;
+    gap: 16px;
+    padding: clamp(18px, 3vw, 24px) clamp(20px, 3.5vw, 28px);
+    background: none;
+    border: 0;
+    font-family: inherit;
+    color: var(--ink);
+    text-align: left;
+    cursor: pointer;
+  }
+  .faq-num {
+    flex: none;
+    width: 22px;
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    color: var(--ink-faint);
+  }
+  .faq-q-text {
+    flex: 1;
+    min-width: 0;
+    font-size: clamp(15.5px, 1.6vw, 16.5px);
+    font-weight: 700;
+    letter-spacing: -0.01em;
+  }
+  .faq-ico {
+    flex: none;
+    width: 30px;
+    height: 30px;
+    border-radius: 50%;
+    border: 1px solid var(--hairline);
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    color: var(--ink-soft);
+    transition: transform 260ms ease, background 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
+  .faq-ico svg { width: 13px; height: 13px; }
+  .faq-item.open .faq-ico {
+    transform: rotate(45deg);
+    background: var(--accent);
+    border-color: var(--accent);
+    color: var(--white);
+  }
+
+  /* smooth expand via grid rows; collapsed only when JS is on (no-JS = all visible) */
+  .faq-a {
+    display: grid;
+    grid-template-rows: 1fr;
+    transition: grid-template-rows 320ms ease;
+  }
+  .js .faq-a { grid-template-rows: 0fr; }
+  .js .faq-item.open .faq-a { grid-template-rows: 1fr; }
+  .faq-a-inner { overflow: hidden; min-height: 0; }
+  .faq-a p {
+    padding: 0 clamp(20px, 3.5vw, 28px) clamp(18px, 3vw, 24px) calc(clamp(20px, 3.5vw, 28px) + 38px);
+    font-size: 15px;
+    line-height: 1.6;
+    color: var(--ink-soft);
+  }
+
+  /* ---------- FINAL CTA PANEL ---------- */
+
+  .cta-final {
+    scroll-margin-top: 80px;
+    padding-bottom: clamp(20px, 3vw, 32px);
+  }
+
+  .cta-final-panel {
+    background: var(--ink);
+    color: var(--paper);
+    border-radius: 30px;
+    box-shadow: 0 2px 6px rgba(22, 19, 14, 0.18), 0 32px 80px rgba(22, 19, 14, 0.32);
+    padding: clamp(44px, 7vw, 80px) clamp(24px, 5vw, 56px);
+    text-align: center;
+  }
+
+  .cta-final-obj {
+    position: relative;
+    width: clamp(120px, 16vw, 160px);
+    margin: 0 auto clamp(18px, 3vw, 28px);
+  }
+  .cta-final-obj::before {
+    content: "";
+    position: absolute;
+    top: 10%;
+    left: 50%;
+    width: 100%;
+    aspect-ratio: 1;
+    transform: translateX(-50%);
+    background: radial-gradient(circle, rgba(242, 107, 29, 0.35), transparent 65%);
+    filter: blur(28px);
+    z-index: 0;
+    pointer-events: none;
+  }
+  .cta-final-obj img {
+    position: relative;
+    z-index: 1;
+    display: block;
+    width: 100%;
+    height: auto;
+    animation: tile-float 6s ease-in-out infinite;
+  }
+
+  .cta-final-panel h2 {
+    font-weight: 700;
+    font-size: clamp(28px, 4vw, 48px);
+    letter-spacing: -0.02em;
+  }
+  .cta-final-sub {
+    margin: 16px auto 0;
+    max-width: 52ch;
+    font-size: clamp(15px, 1.4vw, 17px);
+    line-height: 1.55;
+    color: rgba(246, 244, 239, 0.72);
+  }
+  .cta-final-btn {
+    margin-top: clamp(26px, 4vw, 36px);
+    padding: 18px 40px;
+    font-size: 14px;
+  }
+  /* ---------- FOOTER ---------- */
+
+  .site-footer {
+    padding: clamp(24px, 4vw, 40px) 0 calc(28px + env(safe-area-inset-bottom, 0px));
+  }
+  .site-footer .wrap {
+    display: flex;
+    flex-wrap: wrap;
+    align-items: center;
+    justify-content: space-between;
+    gap: 16px;
+  }
+  .footer-brand {
+    font-family: var(--font-mono);
+    font-weight: 600;
+    font-size: 12px;
+    letter-spacing: 0.12em;
+    display: inline-flex;
+    align-items: center;
+    gap: 10px;
+    white-space: nowrap;
+  }
+  .footer-brand::before {
+    content: "";
+    width: 8px;
+    height: 8px;
+    border-radius: 50%;
+    background: var(--accent);
+    flex: none;
+  }
+  .footer-social { display: flex; gap: 8px; }
+  .footer-social a {
+    width: 38px;
+    height: 38px;
+    border-radius: 50%;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    border: 1px solid var(--hairline);
+    color: var(--ink-soft);
+    transition: background 180ms ease, color 180ms ease, border-color 180ms ease;
+  }
+  .footer-social a:hover {
+    background: var(--ink);
+    border-color: var(--ink);
+    color: var(--paper);
+  }
+  .footer-social svg { width: 17px; height: 17px; fill: currentColor; }
+  .footer-copy {
+    font-family: var(--font-mono);
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    color: var(--ink-faint);
+    white-space: nowrap;
+  }
+  @media (max-width: 640px) {
+    .site-footer .wrap { flex-direction: column; justify-content: center; text-align: center; }
+  }
+
+  /* ---------- SCROLL REVEAL (JS-enhanced only) ---------- */
+
+  .js .reveal {
+    opacity: 0;
+    transform: translateY(12px);
+    transition: opacity 500ms ease, transform 500ms ease;
+  }
+  .js .reveal.is-visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+  @media (prefers-reduced-motion: reduce) {
+    .js .reveal { opacity: 1; transform: none; transition: none; }
+    .glitch, .glitch::before, .glitch::after { animation: none; }
+    .tile, .btn { transition: none; }
+    .hero-float, .hero-jitter, .hero-shadow { animation: none; }
+    .tile-float, .tile-obj-shadow { animation: none; }
+    .js .term-window .term-line { opacity: 1; transform: none; animation: none; }
+    .term-cursor { animation: none; }
+    .faq-a, .faq-ico { transition: none; }
+    .nav-overlay, .nav-overlay li, .nav-overlay .nav-overlay-cta { transition: none; }
+    .nav-burger span { transition: none; }
+    .cta-final-obj img { animation: none; }
+  }
+
+  /* ---------- RESPONSIVE ---------- */
+
+  @media (max-width: 1200px) {
+    nav.menu a .num { display: none; }
+  }
+  @media (min-width: 1024px) {
+    .nav-overlay { display: none; }
+  }
+  @media (max-width: 1023px) {
+    nav.menu { display: none; }
+    .nav-pill { padding: 6px 8px 6px 20px; }
+    .nav-burger { display: inline-flex; }
+    .btn { padding: 14px 24px; font-size: 12px; }
+    .nav-cta { font-size: 10.5px; padding: 8px 14px; }
+  }
+  @media (max-width: 480px) {
+    /* CTA есть в каждой секции; в пилюле на узких экранах оставляем brand + бургер */
+    .nav-cta { display: none; }
+    .nav-pill { padding-right: 6px; }
+  }
+</style>
+</head>
+<body>
+
+<canvas id="dotgrid" aria-hidden="true"></canvas>
+
+<div class="page">
+
+  <div class="nav-wrap">
+    <header class="nav-pill">
+      <a class="brand" href="#">SACHKOV&nbsp;INSIDE</a>
+      <nav class="menu" aria-label="Основная навигация">
+        <ul>
+          <li><a href="#inside"><span class="num">01</span>Что внутри</a></li>
+          <li><a href="#pipeline"><span class="num">02</span>Процесс</a></li>
+          <li><a href="#author"><span class="num">03</span>Автор</a></li>
+          <li><a href="#fit"><span class="num">04</span>Кому подходит</a></li>
+          <li><a href="#faq"><span class="num">05</span>FAQ</a></li>
+        </ul>
+      </nav>
+      <div class="nav-side">
+        <a class="nav-cta" href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a>
+        <button class="nav-burger" type="button" aria-expanded="false" aria-controls="nav-overlay" aria-label="Открыть меню">
+          <span></span><span></span>
+        </button>
+      </div>
+    </header>
+  </div>
+
+  <div class="nav-overlay" id="nav-overlay" aria-hidden="true">
+    <nav aria-label="Мобильная навигация">
+      <ul>
+        <li><a href="#inside"><span class="num">01</span>Что внутри</a></li>
+        <li><a href="#pipeline"><span class="num">02</span>Процесс</a></li>
+        <li><a href="#author"><span class="num">03</span>Автор</a></li>
+        <li><a href="#fit"><span class="num">04</span>Кому подходит</a></li>
+        <li><a href="#faq"><span class="num">05</span>FAQ</a></li>
+      </ul>
+    </nav>
+    <a class="btn btn-primary nav-overlay-cta" href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a>
+  </div>
+  <main>
+    <!-- HERO -->
+    <section class="hero">
+      <div class="wrap hero-grid">
+        <div class="hero-text">
+          <h1 class="hero-title"><span class="h1-line">От разработчика</span><span class="h1-line">к <span class="glitch" data-text="Software Engineer">Software Engineer</span>.</span></h1>
+          <p class="hero-sub">Реальные решения и опыт, архитектура проектов, AI-first разработка с агентами, разбор production кейсов и сообщество.</p>
+          <div class="cta-row">
+            <a class="btn btn-primary" href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a>
+            <a class="btn btn-secondary" href="#inside">Что внутри</a>
+          </div>
+        </div>
+        <div class="hero-object">
+          <div class="hero-float">
+            <div class="hero-jitter">
+              <div class="hero-glow" aria-hidden="true"></div>
+              <picture>
+                <source srcset="assets/hero-computer.webp" type="image/webp">
+                <img src="assets/hero-computer.png" width="900" height="900" alt="Ретро-компьютер из глины с оранжевой буквой S на экране – символ Sachkov Inside">
+              </picture>
+            </div>
+          </div>
+          <div class="hero-shadow" aria-hidden="true"></div>
+        </div>
+      </div>
+    </section>
+
+    <!-- BENTO: ЧТО ВНУТРИ (dark panel) -->
+    <section class="bento-sec" id="inside" aria-label="Что внутри">
+      <div class="wrap">
+        <div class="bento-band">
+          <h2>Что внутри</h2>
+
+          <div class="bento-grid">
+            <!-- 1. PRODUCTION · 3D object -->
+            <article class="tile t-prod reveal">
+              <h3>Production разработка</h3>
+              <p class="tile-desc">Регулярные материалы о том, как устроена реальная разработка веб-сервисов.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="assets/tile-production.webp" type="image/webp">
+                    <img src="assets/tile-production.png" width="693" height="800" alt="Глиняный мини-сервер с оранжевыми статус-лампочками – материалы по production-разработке">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 2. AI-FIRST · 3D object -->
+            <article class="tile t-ai reveal">
+              <h3>Работа с AI-агентами</h3>
+              <p class="tile-desc">Harness, скиллы и пайплайны агентов: проверяем результат их работы и учимся принимать правильные решения.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="assets/tile-ai.webp" type="image/webp">
+                    <img src="assets/tile-ai.png" width="800" height="762" alt="Глиняный робот-ассистент с буквой S на корпусе – работа с AI-агентами">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 3. АРХИТЕКТУРА · 3D object -->
+            <article class="tile t-arch reveal">
+              <h3>Архитектура проектов</h3>
+              <p class="tile-desc">Разбор устройства бэкенда, фронтенда и микросервисов. Строим реальные проекты, а не учебные примеры.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="assets/tile-arch.webp" type="image/webp">
+                    <img src="assets/tile-arch.png" width="799" height="800" alt="Глиняные модули, соединённые светящимися трубками – архитектура проектов">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 4. КАРЬЕРА · 3D object -->
+            <article class="tile t-career reveal">
+              <h3>Карьера</h3>
+              <p class="tile-desc">Гайды по поиску работы и продвижению: резюме, собеседования, грейды.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="assets/tile-career.webp" type="image/webp">
+                    <img src="assets/tile-career.png" width="734" height="800" alt="Глиняная лестница с оранжевым флажком на вершине – карьерный рост">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 5. ПРАКТИКА · 3D object (wide) -->
+            <article class="tile t-practice reveal">
+              <div class="tile-text">
+                <h3>Реальная практика</h3>
+                <p class="tile-desc">Показываю свою текущую работу: решения, ошибки, инфраструктуру, деплой. Практика, с которой можно работать на production, улучшать навыки и продвигаться в карьере.</p>
+              </div>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="assets/tile-practice.webp" type="image/webp">
+                    <img src="assets/tile-practice.png" width="800" height="797" alt="Глиняный верстак с инструментами и лампой – реальная практика">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+
+            <!-- 6. СООБЩЕСТВО · 3D object -->
+            <article class="tile t-community reveal">
+              <h3>Сообщество</h3>
+              <p class="tile-desc">Стань частью комьюнити разработчиков: закрытый чат, обмен опытом, обратная связь по твоим решениям и прямая связь со мной.</p>
+              <div class="tile-artifact tile-obj">
+                <div class="tile-float">
+                  <div class="tile-glow" aria-hidden="true"></div>
+                  <picture>
+                    <source srcset="assets/tile-community.webp" type="image/webp">
+                    <img src="assets/tile-community.png" width="800" height="757" alt="Глиняные пузыри диалога с оранжевыми точками – сообщество">
+                  </picture>
+                </div>
+                <div class="tile-obj-shadow" aria-hidden="true"></div>
+              </div>
+            </article>
+          </div>
+          <p class="sec-cta sec-cta--dark reveal"><a href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a></p>
+        </div>
+      </div>
+    </section>
+
+    <!-- PIPELINE: от проектирования до релиза -->
+    <section class="pipeline" id="pipeline" aria-label="От проектирования до релиза">
+      <div class="wrap">
+        <div class="pipeline-head">
+          <h2>От проектирования до релиза</h2>
+          <p class="pipeline-lead">Уроки, разборы и реальные проекты: покрываем весь путь разработки production-продуктов. Наберись опыта, который важен в коммерческой разработке.</p>
+        </div>
+        <div class="pipeline-grid">
+          <div class="term-window reveal" aria-label="Терминал: прогон CI/CD пайплайна">
+            <div class="term-bar" aria-hidden="true">
+              <span class="term-dot"></span><span class="term-dot"></span><span class="term-dot term-dot--accent"></span>
+              <span class="term-title">sachkov-inside · pipeline</span>
+            </div>
+            <div class="term-body">
+              <p class="term-line"><span class="term-dollar">$</span> sachkov pipeline --run</p>
+              <p class="term-line"><span class="term-check">✓</span> <span class="term-num">01</span> проектирование и архитектура <span class="term-time">1.2s</span></p>
+              <p class="term-line"><span class="term-check">✓</span> <span class="term-num">02</span> AI-first разработка <span class="term-time">3.8s</span></p>
+              <p class="term-line"><span class="term-check">✓</span> <span class="term-num">03</span> ревью и тесты <span class="term-time">2.4s</span></p>
+              <p class="term-line"><span class="term-check">✓</span> <span class="term-num">04</span> CI/CD и деплой <span class="term-time">0.9s</span></p>
+              <p class="term-line"><span class="term-check">✓</span> <span class="term-num">05</span> релиз и мониторинг <span class="term-time">0.4s</span></p>
+              <p class="term-line term-final"><span class="term-check">✓</span> release deployed → production <span class="term-cursor">▋</span></p>
+            </div>
+          </div>
+          <div class="perks">
+            <div class="perk reveal">
+              <h3>Живой продукт, не записанный курс</h3>
+              <p>Материалы выходят постоянно: делюсь 5-летним опытом в реальном времени.</p>
+            </div>
+            <div class="perk perk--teal reveal">
+              <h3>Прямой контакт со мной</h3>
+              <p>Любой вопрос, прямые трансляции, разборы решений, помощь.</p>
+            </div>
+            <div class="perk reveal">
+              <h3>Полный фуллстек</h3>
+              <p>Backend, frontend, инфраструктура, интеграции: от базы данных до платежей и AI.</p>
+            </div>
+            <div class="perk reveal">
+              <h3>Практика для роста</h3>
+              <p>Открытый код, понятные уроки, реальные сценарии: навыки, которые делают тебя востребованным на рынке.</p>
+            </div>
+          </div>
+        </div>
+        <ul class="stack reveal">
+          <li><span class="hl">TS</span> / Go / C# / Java</li>
+          <li>Frontend</li>
+          <li>PostgreSQL</li>
+          <li>Redis</li>
+          <li>Kafka</li>
+          <li>CI/CD</li>
+          <li>Тестирование</li>
+          <li>Production кейсы</li>
+          <li>Авторизация и аутентификация</li>
+          <li>Релиз в продакшен</li>
+          <li class="stack-teal">AI-интеграция</li>
+          <li class="stack-teal">AI-разработка</li>
+        </ul>
+        <p class="sec-cta reveal"><a href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a></p>
+      </div>
+    </section>
+
+    <!-- AUTHOR: кто ведёт канал -->
+    <section class="author" id="author" aria-label="Кто ведёт канал">
+      <div class="wrap">
+        <div class="author-head reveal">
+          <h2>Кто ведёт канал</h2>
+        </div>
+        <div class="author-card reveal">
+          <div class="author-photo">
+            <picture>
+              <source srcset="assets/author.webp" type="image/webp">
+              <img src="assets/author.png" width="839" height="1200" alt="Кирилл Сачков, автор канала Sachkov Inside">
+            </picture>
+          </div>
+          <div class="author-body">
+            <h3 class="author-name">Кирилл Сачков</h3>
+            <p class="author-facts">Software Engineer · 5 лет опыта · 3+ года менторства</p>
+            <p class="author-text">В одиночку построил платформу SachkovLearn с нуля: архитектура, бэкенд, фронтенд, деплой. Веду YouTube-канал по разработке. На курсе больше 250 учеников, десятки получили офферы.</p>
+            <p class="author-text">Sachkov Inside – моя текущая работа в реальном времени: всё, что делаю и изучаю сам, попадает в канал. При любых сомнениях напиши лично, отвечаю каждому.</p>
+            <dl class="author-stats">
+              <div>
+                <dt>Опыт</dt>
+                <dd>5+ лет</dd>
+              </div>
+              <div>
+                <dt>Менторство</dt>
+                <dd>3+ года</dd>
+              </div>
+              <div>
+                <dt>Ученики</dt>
+                <dd>250+</dd>
+              </div>
+            </dl>
+            <div class="author-cta">
+              <a class="btn btn-primary" href="https://t.me/sachkov_blog" target="_blank" rel="noopener">Написать мне</a>
+              <div class="author-social">
+                <a href="https://t.me/sachkov_blog" target="_blank" rel="noopener" aria-label="Telegram">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.04 15.37l-.38 5.32c.54 0 .78-.23 1.06-.5l2.55-2.44 5.28 3.87c.97.53 1.66.25 1.92-.9l3.48-16.3c.31-1.43-.52-2-1.45-1.64L2.6 9.66c-1.4.54-1.38 1.32-.24 1.67l5.2 1.62L19.6 6.3c.57-.37 1.08-.17.66.2L9.04 15.37z"/></svg>
+                </a>
+                <a href="https://www.youtube.com/@SachkovDev/videos" target="_blank" rel="noopener" aria-label="YouTube">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+                </a>
+                <a href="https://github.com/KirillSachkov" target="_blank" rel="noopener" aria-label="GitHub">
+                  <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.3 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.9 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="sec-cta reveal"><a href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a></p>
+      </div>
+    </section>
+
+    <!-- AUDIENCE FIT: кому это подходит -->
+    <section class="fit" id="fit" aria-label="Кому это подходит">
+      <div class="wrap">
+        <div class="fit-head reveal">
+          <h2>Кому это подходит</h2>
+        </div>
+        <div class="fit-grid">
+          <div class="fit-card reveal">
+            <h3>Подходит, если ты:</h3>
+            <ul class="fit-list">
+              <li>
+                <span class="fit-ico fit-ico--yes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span>
+                <p>Знаешь хотя бы один язык программирования и хочешь делать реальные проекты, а не учебные примеры.</p>
+              </li>
+              <li>
+                <span class="fit-ico fit-ico--yes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span>
+                <p>Работаешь разработчиком и хочешь расти в профессии, переходить на следующий уровень.</p>
+              </li>
+              <li>
+                <span class="fit-ico fit-ico--yes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span>
+                <p>Хочешь освоить AI-first разработку: агенты, подходы и практики, которые всё чаще требуются на реальной работе.</p>
+              </li>
+              <li>
+                <span class="fit-ico fit-ico--yes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span>
+                <p>Хочешь стать частью сообщества заряженных разработчиков: обмен опытом и прямая связь со мной.</p>
+              </li>
+              <li>
+                <span class="fit-ico fit-ico--yes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span>
+                <p>Нужно пространство, которое развивается всегда: актуальные материалы выходят постоянно, а не записанный курс, который устаревает.</p>
+              </li>
+              <li>
+                <span class="fit-ico fit-ico--yes" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M9 16.2 4.8 12l-1.4 1.4L9 19 21 7l-1.4-1.4z"/></svg></span>
+                <p>Не готов платить 100+ тысяч за курс: подписка стоит в десятки раз меньше.</p>
+              </li>
+            </ul>
+          </div>
+          <div class="fit-card reveal">
+            <h3>Не подходит, если ты:</h3>
+            <ul class="fit-list">
+              <li>
+                <span class="fit-ico fit-ico--no" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span>
+                <p>Не знаешь программирования совсем и ищешь базовое обучение.</p>
+              </li>
+              <li>
+                <span class="fit-ico fit-ico--no" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span>
+                <p>Нужна чёткая программа и последовательный курс: это не курс.</p>
+              </li>
+              <li>
+                <span class="fit-ico fit-ico--no" aria-hidden="true"><svg viewBox="0 0 24 24"><path d="M19 6.41 17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/></svg></span>
+                <p>Ищешь гарантию трудоустройства.</p>
+              </li>
+            </ul>
+          </div>
+        </div>
+        <p class="sec-cta reveal"><a href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a></p>
+      </div>
+    </section>
+
+    <!-- FAQ: вопросы и ответы -->
+    <section class="faq" id="faq" aria-label="Вопросы и ответы">
+      <div class="wrap">
+        <div class="faq-head reveal">
+          <h2>Вопросы и ответы</h2>
+        </div>
+        <div class="faq-list">
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">01</span>
+              <span class="faq-q-text">Я знаю только один язык. Подойдёт?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Да. Принципы production-разработки и AI-first подходы не привязаны к языку: примеры в основном на TypeScript, но всё переносится на Go, C#, Java и любой другой стек.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">02</span>
+              <span class="faq-q-text">Это курс с чёткой программой?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Нет, это живой канал. Материалы выходят постоянно и следуют за реальной работой: сегодня архитектура сервиса, завтра разбор пайплайна с агентами. Ты выбираешь темы, которые нужны именно тебе.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">03</span>
+              <span class="faq-q-text">Сколько времени нужно уделять?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Столько, сколько хочешь. Материалы короткие и практичные: их можно смотреть в своём темпе, а вопросы задавать в чате.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">04</span>
+              <span class="faq-q-text">Будут ли ответы на мои вопросы?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Да. Прямая связь со мной, разборы решений и прямые трансляции: любой вопрос по теме можно задать лично.</p>
+              </div>
+            </div>
+          </div>
+          <div class="faq-item reveal">
+            <button class="faq-q" type="button" aria-expanded="false">
+              <span class="faq-num" aria-hidden="true">05</span>
+              <span class="faq-q-text">Что, если мне не зайдёт?</span>
+              <span class="faq-ico" aria-hidden="true"><svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.2" stroke-linecap="round"><path d="M12 5v14M5 12h14"/></svg></span>
+            </button>
+            <div class="faq-a">
+              <div class="faq-a-inner">
+                <p>Подписка отменяется в любой момент, без обязательств и скрытых условий.</p>
+              </div>
+            </div>
+          </div>
+        </div>
+        <p class="sec-cta reveal"><a href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a></p>
+      </div>
+    </section>
+
+    <!-- FINAL CTA: доступ -->
+    <section class="cta-final" id="access" aria-label="Получить доступ">
+      <div class="wrap">
+        <div class="cta-final-panel reveal">
+          <div class="cta-final-obj">
+            <picture>
+              <source srcset="assets/tile-ai.webp" type="image/webp">
+              <img src="assets/tile-ai.png" width="800" height="762" alt="Глиняный робот-ассистент с буквой S – маскот Sachkov Inside">
+            </picture>
+          </div>
+          <h2>Заходи в Sachkov Inside</h2>
+          <p class="cta-final-sub">Подписка на приватный Telegram-канал: материалы каждую неделю, прямая связь со мной, отмена в любой момент.</p>
+          <a class="btn btn-primary cta-final-btn" href="https://web.tribute.tg/s/13EA" target="_blank" rel="noopener">Получить доступ</a>
+        </div>
+      </div>
+    </section>
+  </main>
+
+  <footer class="site-footer">
+    <div class="wrap">
+      <span class="footer-brand">SACHKOV&nbsp;INSIDE</span>
+      <div class="footer-social">
+        <a href="https://t.me/sachkov_blog" target="_blank" rel="noopener" aria-label="Telegram">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M9.04 15.37l-.38 5.32c.54 0 .78-.23 1.06-.5l2.55-2.44 5.28 3.87c.97.53 1.66.25 1.92-.9l3.48-16.3c.31-1.43-.52-2-1.45-1.64L2.6 9.66c-1.4.54-1.38 1.32-.24 1.67l5.2 1.62L19.6 6.3c.57-.37 1.08-.17.66.2L9.04 15.37z"/></svg>
+        </a>
+        <a href="https://www.youtube.com/@SachkovDev/videos" target="_blank" rel="noopener" aria-label="YouTube">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M23.5 6.19a3.02 3.02 0 0 0-2.12-2.14C19.5 3.55 12 3.55 12 3.55s-7.5 0-9.38.5A3.02 3.02 0 0 0 .5 6.19C0 8.07 0 12 0 12s0 3.93.5 5.81a3.02 3.02 0 0 0 2.12 2.14c1.88.5 9.38.5 9.38.5s7.5 0 9.38-.5a3.02 3.02 0 0 0 2.12-2.14C24 15.93 24 12 24 12s0-3.93-.5-5.81zM9.55 15.57V8.43L15.82 12l-6.27 3.57z"/></svg>
+        </a>
+        <a href="https://github.com/KirillSachkov" target="_blank" rel="noopener" aria-label="GitHub">
+          <svg viewBox="0 0 24 24" aria-hidden="true"><path d="M12 .3a12 12 0 0 0-3.8 23.4c.6.1.8-.3.8-.6v-2c-3.3.7-4-1.6-4-1.6-.6-1.4-1.4-1.8-1.4-1.8-1-.7.1-.7.1-.7 1.2.1 1.8 1.2 1.8 1.2 1 1.8 2.8 1.3 3.5 1 .1-.8.4-1.3.7-1.6-2.7-.3-5.5-1.3-5.5-6 0-1.2.5-2.3 1.3-3.1-.2-.4-.6-1.6.1-3.2 0 0 1-.3 3.4 1.2a11.5 11.5 0 0 1 6 0C17.3 4.7 18.3 5 18.3 5c.7 1.6.3 2.8.1 3.2.8.8 1.3 1.9 1.3 3.2 0 4.6-2.9 5.6-5.5 5.9.4.4.8 1.1.8 2.2v3.3c0 .3.2.7.8.6A12 12 0 0 0 12 .3"/></svg>
+        </a>
+      </div>
+      <span class="footer-copy">© 2026 Sachkov Inside</span>
+    </div>
+  </footer>
+
+</div>
+
+<script>
+  (function () {
+    document.documentElement.classList.add('js');
+
+    var reduce = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
+    /* ---------- Glitch debug helper: ?glitch jumps the 7s cycle to the first burst,
+       ?glitch=freeze freezes a representative burst frame (deterministic screenshots) ---------- */
+    if (location.search.indexOf('glitch=freeze') !== -1) {
+      var stf = document.createElement('style');
+      stf.textContent =
+        '.glitch { animation: none !important; color: var(--ink) !important; text-shadow: -2px 0 var(--accent), 2px 0 var(--teal) !important; }' +
+        '.glitch::before { animation: none !important; opacity: 1 !important; color: var(--accent); clip-path: polygon(0 10%,100% 0,100% 30%,0 35%); transform: translate(8px,4px) skewX(-12deg); }' +
+        '.glitch::after { animation: none !important; opacity: 1 !important; color: var(--teal); clip-path: polygon(0 55%,100% 55%,100% 100%,0 100%); transform: translate(8px,4px); }';
+      document.head.appendChild(stf);
+    } else if (location.search.indexOf('glitch') !== -1) {
+      var st = document.createElement('style');
+      st.textContent = '.glitch, .glitch::before, .glitch::after { animation-delay: -2.05s !important; }';
+      document.head.appendChild(st);
+    }
+
+    /* ---------- Scroll reveal ---------- */
+    var targets = document.querySelectorAll('.reveal');
+    if (reduce || !('IntersectionObserver' in window)) {
+      targets.forEach(function (el) { el.classList.add('is-visible'); });
+    } else {
+      // stagger 60ms among reveal siblings in the same container
+      var groups = new Map();
+      targets.forEach(function (el) {
+        var p = el.parentElement;
+        var i = groups.get(p) || 0;
+        el.style.transitionDelay = (i * 60) + 'ms';
+        groups.set(p, i + 1);
+      });
+      var io = new IntersectionObserver(function (entries) {
+        entries.forEach(function (entry) {
+          if (entry.isIntersecting) {
+            entry.target.classList.add('is-visible');
+            io.unobserve(entry.target);
+          }
+        });
+      }, { threshold: 0.12 });
+      targets.forEach(function (el) { io.observe(el); });
+    }
+
+    /* ---------- Mobile nav overlay ----------
+       Debug: ?nav=open shows the overlay immediately (for screenshots) */
+    var burger = document.querySelector('.nav-burger');
+    var navOverlay = document.getElementById('nav-overlay');
+    if (burger && navOverlay) {
+      var navSet = function (open) {
+        navOverlay.classList.toggle('open', open);
+        burger.classList.toggle('open', open);
+        burger.setAttribute('aria-expanded', open ? 'true' : 'false');
+        burger.setAttribute('aria-label', open ? 'Закрыть меню' : 'Открыть меню');
+        navOverlay.setAttribute('aria-hidden', open ? 'false' : 'true');
+        document.body.style.overflow = open ? 'hidden' : '';
+      };
+      burger.addEventListener('click', function () {
+        navSet(!navOverlay.classList.contains('open'));
+      });
+      navOverlay.querySelectorAll('a').forEach(function (a) {
+        a.addEventListener('click', function () { navSet(false); });
+      });
+      document.addEventListener('keydown', function (e) {
+        if (e.key === 'Escape' && navOverlay.classList.contains('open')) {
+          navSet(false);
+          burger.focus();
+        }
+      });
+      if (location.search.indexOf('nav=open') !== -1) navSet(true);
+    }
+
+    /* ---------- FAQ accordion (independent items) ----------
+       Debug: ?faq=open expands all items (for screenshots) */
+    var faqOpenAll = location.search.indexOf('faq=open') !== -1;
+    document.querySelectorAll('.faq-item').forEach(function (item, i) {
+      var btn = item.querySelector('.faq-q');
+      var panel = item.querySelector('.faq-a');
+      var panelId = 'faq-a-' + (i + 1);
+      panel.id = panelId;
+      btn.setAttribute('aria-controls', panelId);
+      function setOpen(open) {
+        item.classList.toggle('open', open);
+        btn.setAttribute('aria-expanded', open ? 'true' : 'false');
+      }
+      setOpen(faqOpenAll);
+      btn.addEventListener('click', function () {
+        setOpen(!item.classList.contains('open'));
+      });
+    });
+
+    /* ---------- Terminal: staged line entrance (plays once) ----------
+       Debug: ?static shows all lines immediately (for screenshots) */
+    var termWin = document.querySelector('.term-window');
+    if (termWin) {
+      if (location.search.indexOf('static') !== -1) {
+        // ?static: force every line visible, skip the stagger entirely (QA screenshots)
+        var sts = document.createElement('style');
+        sts.textContent = '.js .term-window .term-line { opacity: 1 !important; transform: none !important; animation: none !important; } .js .reveal { opacity: 1 !important; transform: none !important; transition: none !important; }';
+        document.head.appendChild(sts);
+      } else if (reduce || !('IntersectionObserver' in window)) {
+        termWin.classList.add('term-play');
+      } else {
+        var tio = new IntersectionObserver(function (entries) {
+          entries.forEach(function (entry) {
+            if (entry.isIntersecting) {
+              termWin.classList.add('term-play');
+              tio.disconnect();
+            }
+          });
+        }, { threshold: 0.25 });
+        tio.observe(termWin);
+      }
+    }
+
+    /* ---------- Interactive dot-grid canvas (vanilla port of the Quordix technique) ---------- */
+    var canvas = document.getElementById('dotgrid');
+    if (!canvas || !canvas.getContext) return;
+    var ctx = canvas.getContext('2d');
+
+    var SPACING = 30;
+    var BASE_R = 1.5;
+    var HOVER_R = 100;
+    var SCAN_DUR = 2500;
+    var SCAN_PAUSE = 4000;
+    var BASE_COLOR = 'rgba(22,19,14,0.10)';
+    var ACTIVE_COLOR = '#F26B1D';
+    var GLOW = 'rgba(242,107,29,0.35)';
+
+    var mouseX = -1000, mouseY = -1000;
+    var isMobile = false;
+    var cw = 0, ch = 0;
+    var raf = null;
+    var particles = [];
+
+    function newParticle() {
+      return {
+        x: Math.random() * cw,
+        y: Math.random() * ch,
+        vx: (Math.random() - 0.5) * 0.4,
+        vy: (Math.random() - 0.5) * 0.4,
+        size: Math.random() * 2 + 0.5
+      };
+    }
+
+    function resize() {
+      var dpr = Math.min(window.devicePixelRatio || 1, 2);
+      cw = window.innerWidth;
+      ch = window.innerHeight;
+      canvas.width = Math.round(cw * dpr);
+      canvas.height = Math.round(ch * dpr);
+      canvas.style.width = cw + 'px';
+      canvas.style.height = ch + 'px';
+      ctx.setTransform(dpr, 0, 0, dpr, 0, 0);
+      isMobile = cw < 768;
+      particles = [];
+      var n = isMobile ? 14 : 30;
+      for (var i = 0; i < n; i++) particles.push(newParticle());
+      if (reduce) drawFrame(0); // static frame on resize
+    }
+
+    function drawFrame(now) {
+      ctx.clearRect(0, 0, cw, ch);
+
+      // drifting faint orange particles
+      for (var i = 0; i < particles.length; i++) {
+        var p = particles[i];
+        p.x += p.vx; p.y += p.vy;
+        if (p.x < 0 || p.x > cw) p.vx *= -1;
+        if (p.y < 0 || p.y > ch) p.vy *= -1;
+        ctx.beginPath();
+        ctx.arc(p.x, p.y, p.size, 0, Math.PI * 2);
+        ctx.fillStyle = 'rgba(242,107,29,0.15)';
+        ctx.fill();
+      }
+
+      // mobile: slow horizontal scan line (2.5s sweep + 4s pause) instead of cursor
+      var loopTime = now % (SCAN_DUR + SCAN_PAUSE);
+      var scanY = (Math.min(loopTime / SCAN_DUR, 1)) * (ch + HOVER_R * 2) - HOVER_R;
+
+      for (var x = 0; x < cw; x += SPACING) {
+        for (var y = 0; y < ch; y += SPACING) {
+          var dist;
+          if (isMobile) {
+            dist = Math.abs(y - scanY);
+          } else {
+            var dx = x - mouseX, dy = y - mouseY;
+            dist = Math.sqrt(dx * dx + dy * dy);
+          }
+          if (dist < HOVER_R) {
+            var scale = 1 - dist / HOVER_R;
+            ctx.fillStyle = ACTIVE_COLOR;
+            ctx.shadowBlur = 15;
+            ctx.shadowColor = GLOW;
+            ctx.beginPath();
+            ctx.arc(x, y, BASE_R + scale * 3, 0, Math.PI * 2);
+            ctx.fill();
+          } else {
+            ctx.fillStyle = BASE_COLOR;
+            ctx.shadowBlur = 0;
+            ctx.shadowColor = 'transparent';
+            ctx.beginPath();
+            ctx.arc(x, y, BASE_R, 0, Math.PI * 2);
+            ctx.fill();
+          }
+        }
+      }
+      ctx.shadowBlur = 0;
+      ctx.shadowColor = 'transparent';
+    }
+
+    function loop(now) {
+      drawFrame(now);
+      raf = requestAnimationFrame(loop);
+    }
+
+    function onPointerMove(e) {
+      if (isMobile) return;
+      mouseX = e.clientX;
+      mouseY = e.clientY;
+    }
+    function onPointerLeave() {
+      mouseX = -1000;
+      mouseY = -1000;
+    }
+
+    window.addEventListener('resize', resize);
+    resize();
+
+    if (reduce) {
+      // prefers-reduced-motion: one static frame, no rAF loop, no listeners needed
+      drawFrame(0);
+      return;
+    }
+
+    window.addEventListener('mousemove', onPointerMove);
+    document.documentElement.addEventListener('mouseleave', onPointerLeave);
+
+    document.addEventListener('visibilitychange', function () {
+      if (document.hidden) {
+        if (raf !== null) { cancelAnimationFrame(raf); raf = null; }
+      } else if (raf === null) {
+        raf = requestAnimationFrame(loop);
+      }
+    });
+
+    /* ---------- Hero object mouse parallax (desktop only, JS enhancement) ---------- */
+    var heroSec = document.querySelector('.hero');
+    var heroObj = document.querySelector('.hero-object');
+    if (heroSec && heroObj) {
+      var tRX = 0, tRY = 0, cRX = 0, cRY = 0, pRaf = null;
+      var pLoop = function () {
+        cRX += (tRX - cRX) * 0.08;
+        cRY += (tRY - cRY) * 0.08;
+        heroObj.style.transform = 'perspective(900px) rotateX(' + cRX.toFixed(2) + 'deg) rotateY(' + cRY.toFixed(2) + 'deg)';
+        if (Math.abs(tRX - cRX) > 0.01 || Math.abs(tRY - cRY) > 0.01) {
+          pRaf = requestAnimationFrame(pLoop);
+        } else {
+          pRaf = null;
+        }
+      };
+      var kick = function () { if (pRaf === null) pRaf = requestAnimationFrame(pLoop); };
+      heroSec.addEventListener('mousemove', function (e) {
+        if (window.innerWidth < 900) return;
+        var r = heroSec.getBoundingClientRect();
+        var nx = (e.clientX - r.left) / r.width - 0.5;
+        var ny = (e.clientY - r.top) / r.height - 0.5;
+        tRY = nx * 6;
+        tRX = -ny * 6;
+        kick();
+      });
+      heroSec.addEventListener('mouseleave', function () {
+        tRX = 0; tRY = 0;
+        kick();
+      });
+    }
+
+    raf = requestAnimationFrame(loop);
+  })();
+</script>
+</body>
+</html>

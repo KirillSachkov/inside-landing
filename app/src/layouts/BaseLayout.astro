@@ -7,6 +7,27 @@ interface Props {
 }
 
 const { title, description } = Astro.props;
+const canonicalUrl = new URL(Astro.url.pathname, Astro.site ?? Astro.url.origin);
+const socialImageUrl = new URL("/assets/og.png", canonicalUrl);
+const socialImageAlt = "Sachkov Inside: от разработчика к Software Engineer";
+const structuredData = {
+  "@context": "https://schema.org",
+  "@type": "WebSite",
+  name: "Sachkov Inside",
+  url: canonicalUrl.toString(),
+  description,
+  inLanguage: "ru-RU",
+  author: {
+    "@type": "Person",
+    name: "Кирилл Сачков",
+    url: "https://sachkov.dev/#author",
+    sameAs: [
+      "https://t.me/sachkov_blog",
+      "https://www.youtube.com/@SachkovDev/videos",
+      "https://github.com/KirillSachkov",
+    ],
+  },
+};
 ---
 
 <!doctype html>
@@ -16,11 +37,25 @@ const { title, description } = Astro.props;
     <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
     <title>{title}</title>
     <meta name="description" content={description} />
+    <meta name="robots" content="index, follow, max-image-preview:large" />
+    <meta name="theme-color" content="#f6f4ef" />
+    <link rel="canonical" href={canonicalUrl} />
     <meta property="og:type" content="website" />
+    <meta property="og:site_name" content="Sachkov Inside" />
+    <meta property="og:locale" content="ru_RU" />
+    <meta property="og:url" content={canonicalUrl} />
     <meta property="og:title" content={title} />
     <meta property="og:description" content={description} />
-    <meta property="og:image" content="/assets/og.png" />
+    <meta property="og:image" content={socialImageUrl} />
+    <meta property="og:image:type" content="image/png" />
+    <meta property="og:image:width" content="1200" />
+    <meta property="og:image:height" content="630" />
+    <meta property="og:image:alt" content={socialImageAlt} />
     <meta name="twitter:card" content="summary_large_image" />
+    <meta name="twitter:title" content={title} />
+    <meta name="twitter:description" content={description} />
+    <meta name="twitter:image" content={socialImageUrl} />
+    <meta name="twitter:image:alt" content={socialImageAlt} />
     <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
     <link rel="preload" as="image" href="/assets/hero-computer.webp" type="image/webp" fetchpriority="high" />
     <link rel="preconnect" href="https://fonts.googleapis.com" />
@@ -29,6 +64,7 @@ const { title, description } = Astro.props;
       href="https://fonts.googleapis.com/css2?family=Space+Grotesk:wght@400;500;700&family=JetBrains+Mono:wght@400;500;600&display=swap"
       rel="stylesheet"
     />
+    <script is:inline type="application/ld+json" set:html={JSON.stringify(structuredData)}></script>
   </head>
   <body>
     <slot />

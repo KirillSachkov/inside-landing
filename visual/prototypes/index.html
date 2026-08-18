@@ -1,0 +1,72 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Sachkov Inside — визуальные направления (прототипы)</title>
+<style>
+  :root { --ink: #16130E; --paper: #F4F2EC; --accent: #F26B1D; }
+  * { margin: 0; padding: 0; box-sizing: border-box; }
+  body {
+    font-family: -apple-system, "SF Pro Text", "Helvetica Neue", sans-serif;
+    background: var(--paper); color: var(--ink);
+    min-height: 100vh; display: flex; flex-direction: column;
+    align-items: center; padding: 64px 24px;
+  }
+  header { text-align: center; margin-bottom: 48px; max-width: 640px; }
+  .eyebrow { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 12px;
+    letter-spacing: .08em; color: var(--accent); margin-bottom: 12px; }
+  h1 { font-size: clamp(24px, 4vw, 36px); font-weight: 800; margin-bottom: 12px; }
+  p.sub { color: #6B655A; font-size: 15px; line-height: 1.5; }
+  .grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+    gap: 20px; max-width: 1100px; width: 100%; }
+  a.card {
+    display: block; text-decoration: none; color: inherit;
+    background: #fff; border: 1px solid #E0DCD2; border-radius: 14px;
+    padding: 28px; transition: transform .2s ease, box-shadow .2s ease;
+  }
+  a.card:hover { transform: translateY(-3px); box-shadow: 0 12px 32px rgba(22,19,14,.10); }
+  a.card:focus-visible { outline: 3px solid var(--accent); outline-offset: 2px; }
+  .tag { font-family: ui-monospace, "SF Mono", Menlo, monospace; font-size: 11px;
+    letter-spacing: .06em; margin-bottom: 10px; display: inline-block; padding: 4px 8px;
+    border-radius: 6px; }
+  .tag-a { background: #FDE9DC; color: #B34A0E; }
+  .tag-b { background: #232030; color: #E8A33D; }
+  .tag-c { background: #EFE7D9; color: #8A5A33; }
+  h2 { font-size: 20px; font-weight: 700; margin-bottom: 8px; }
+  .desc { font-size: 14px; line-height: 1.55; color: #57534A; }
+  footer { margin-top: 56px; font-family: ui-monospace, "SF Mono", Menlo, monospace;
+    font-size: 11px; color: #9A9488; letter-spacing: .06em; }
+</style>
+</head>
+<body>
+  <header>
+    <div class="eyebrow">SACHKOV INSIDE · VISUAL DIRECTIONS</div>
+    <h1>Три направления — одинаковый текст, разный визуальный язык</h1>
+    <p class="sub">Прототипы для сравнения, не продакшн. Открывай каждую страницу, листай, смотри на десктопе и в узком окне. Выбор фиксируем в visual/README.md.</p>
+  </header>
+  <main class="grid">
+    <a class="card" href="a2-spec-soft.html">
+      <span class="tag tag-a">A2 · СПЕЦИФИКАЦИЯ SOFT + ГЛИТЧ</span>
+      <h2>Мягкая спецификация с глитчем</h2>
+      <p class="desc">Структура A, но скруглённая и объёмная: pill-навигация с блюром, интерактивная точечная сетка (курсор-фонарик, на мобиле — сканирующая линия), глитч слова «ВНУТРИ» раз в 7 секунд, мягкие тени карточек. По мотивам Quordix (019).</p>
+    </a>
+    <a class="card" href="a-spec.html">
+      <span class="tag tag-a">A · СПЕЦИФИКАЦИЯ (V1)</span>
+      <h2>Светлый инженерный документ</h2>
+      <p class="desc">Миллиметровка, острые рамки, строгий документ. Первый вариант — оставлен для сравнения с A2.</p>
+    </a>
+    <a class="card" href="b-console.html">
+      <span class="tag tag-b">B · КОНСОЛЬ</span>
+      <h2>Приглушённая тёмная сцена</h2>
+      <p class="desc">Почти-чёрный сливовый фон, янтарный акцент, артефакты светятся как экраны в тёмной комнате, двухтональные заголовки. Опоры: Railway, SEOtalos, Light.</p>
+    </a>
+    <a class="card" href="c-workshop.html">
+      <span class="tag tag-c">C · МАСТЕРСКАЯ</span>
+      <h2>Тёплая редакционная бумага</h2>
+      <p class="desc">Крем и крафт, олива + терракота, slab-заголовки, bento-сетка «живых доказательств» — прогресс build-серии, ADR, чат. Опоры: The Neuron, Be.run.</p>
+    </a>
+  </main>
+  <footer>PROTOTYPES · NOT FOR PRODUCTION · 2026-08-16</footer>
+</body>
+</html>
