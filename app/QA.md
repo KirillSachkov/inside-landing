@@ -23,7 +23,7 @@ The prototype and Astro output were compared with full-page browser screenshots.
 
 ## Interaction and accessibility checks
 
-- All nine conversion links resolve in the generated page to `https://web.tribute.tg/s/13EA`, open a new tab, and include `rel="noopener"`.
+- All ten conversion links resolve in the generated page to `https://t.me/tribute/app?startapp=s13EA_pc_INSIDE`, open a new tab, and include `rel="noopener"`.
 - The mobile menu opens from the burger button, closes with Escape, restores focus, and locks body scrolling while open.
 - FAQ items toggle independently and keep `aria-expanded` and `aria-controls` in sync.
 - Reduced-motion mode disables the glitch, reveal, terminal, floating-object, navigation, CTA, and social-link motion.

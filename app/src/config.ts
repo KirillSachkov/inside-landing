@@ -1,1 +1,1 @@
-export const TRIBUTE_URL = "https://web.tribute.tg/s/13EA";
+export const TRIBUTE_URL = "https://t.me/tribute/app?startapp=s13EA_pc_INSIDE";

@@ -11,7 +11,7 @@ Status: **draft block map, under discussion**. Nothing here is final copy.
 
 Rules: claims, prices, testimonials are never invented — unknowns are marked
 `TBD`. The conversion event is settled (2026-08-18): every «Получить доступ»
-leads to the Tribute payment page `https://web.tribute.tg/s/13EA`
+leads to the Tribute app `https://t.me/tribute/app?startapp=s13EA_pc_INSIDE`
 (target=_blank); the price is NOT shown on the landing itself.
 
 ## Block map (proposal v1)
@@ -44,7 +44,7 @@ _Discussion decisions land here as we go, newest first._
 
 Owner pass: trust line «TELEGRAM-FIRST · WEEKLY · CANCEL ANYTIME» removed
 from the final CTA panel (sub already says the same in Russian). Tribute link
-updated everywhere to `https://web.tribute.tg/s/13EA` (9 CTAs). Stack chips
+updated everywhere to `https://t.me/tribute/app?startapp=s13EA_pc_INSIDE` (10 CTAs). Stack chips
 legibility fixed on the light background: solid white fill, darker border
 (rgba ink 0.18), ink text at weight 500 (was 60%-white fill + hairline +
 ink-soft text); teal AI chips keep the teal accent. «Платежи» chip earlier

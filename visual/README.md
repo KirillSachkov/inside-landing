@@ -92,7 +92,7 @@ Hero → Что внутри (dark bento, 6 clay tiles) → От проекти�
 (terminal + 4 perks + stack chips) → Кто ведёт канал (author card) → Кому это
 подходит (fit cards) → Вопросы и ответы (accordion) → Заходи в Sachkov Inside
 (dark final CTA) → footer. Conversion: all «Получить доступ» →
-`https://web.tribute.tg/s/13EA` (new tab); price is not shown on the landing.
+`https://t.me/tribute/app?startapp=s13EA_pc_INSIDE` (new tab); price is not shown on the landing.
 
 ## Open questions
 
