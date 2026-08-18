@@ -38,13 +38,10 @@ The prototype and Astro output were compared with full-page browser screenshots.
 - The Tribute target and link behavior were verified; no external checkout or payment was completed.
 - Production Core Web Vitals require a deployed URL and real traffic, so they are not verified here.
 
-## Timeweb production container
+## Timeweb production build
 
-- `npm run verify` completes with Astro Check reporting 0 errors, 0 warnings, and 0 hints, then validates the production canonical, Open Graph image, robots, sitemap, and health endpoint.
-- The repository-root Dockerfile builds the site on Node 22 and serves it with Nginx on port 8080, matching the Timeweb App Platform Dockerfile contract.
-- The built image reached Docker health status `healthy`; `/healthz` and `/` returned 200, while an unknown path returned 404.
-- The root response included CSP, HSTS, Permissions Policy, Referrer Policy, X-Content-Type-Options, X-Frame-Options, and explicit HTML cache behavior.
-- Browser QA against the container confirmed the production canonical and Open Graph URL, valid WebSite JSON-LD, nine conversion links, all nine loaded images, no horizontal overflow, no console errors, and the same 393-pixel full-page composition.
-- A container-backed no-JavaScript browser check confirmed the six-link fallback navigation and hidden inert burger.
+- `npm run verify` completes with Astro Check reporting 0 errors, 0 warnings, and 0 hints, then validates the production canonical, Open Graph image, robots, sitemap, and health endpoint in the generated static output.
+- Browser QA against the production build confirmed the production canonical and Open Graph URL, valid WebSite JSON-LD, nine conversion links, all nine loaded images, no horizontal overflow, no console errors, and the same 393-pixel full-page composition.
+- A no-JavaScript browser check confirmed the six-link fallback navigation and hidden inert burger.
 
 The actual Timeweb deployment, domain rebinding, external Tribute checkout, and field Core Web Vitals remain post-push operational checks.

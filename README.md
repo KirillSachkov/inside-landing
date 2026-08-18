@@ -1,7 +1,7 @@
 # inside-landing
 
-Production landing for Sachkov Inside. The site is a static Astro build served by
-Nginx in a Docker container.
+Production landing for Sachkov Inside. The site is a static Astro build deployed
+as a frontend application.
 
 ## Local development
 
@@ -16,7 +16,6 @@ Run the complete production verification:
 
 ```sh
 npm run verify --prefix app
-docker build --tag inside-landing:local .
 ```
 
 ## Timeweb App Platform
@@ -25,12 +24,14 @@ Create the application with these settings:
 
 - source: GitHub repository `KirillSachkov/inside-landing`;
 - branch: `main`;
-- application type: `Dockerfile`;
-- project directory: leave empty because `Dockerfile` is in the repository root;
-- build from the latest commit: enabled if automatic deploys are wanted;
+- application type: `Frontend` -> `Other`;
+- Node.js version: `22`;
+- build command: `npm run verify`;
+- system dependencies: leave empty;
+- build directory: `dist`;
+- project directory: `app`;
 - environment variables: none;
-- port: detected from `EXPOSE 8080`;
-- health check: provided by the Docker image at `/healthz`.
+- build from the latest commit: enabled if automatic deploys are wanted;
 
 After the technical preview is verified, attach `sachkov.dev` in the application's
 domain settings. Timeweb App Platform will issue and renew the Let's Encrypt
