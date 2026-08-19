@@ -54,18 +54,37 @@ and updates the index and taxonomy.
 
 ## Frontend and design skills
 
-Installed in `.agents/skills/` for the design/implementation phases:
+The shared Inside product harness provides these skills in `.agents/skills/` and
+`.claude/skills/` for design and implementation work:
 
 - `frontend-design` (anthropics/skills) — art direction, typography, composition,
   avoiding templated AI-looking design.
 - `impeccable` (pbakaus/impeccable) — UI polish and critique: typography, color,
   layout, responsive, motion, anti-slop checks.
-- `react-best-practices` (vercel-labs/agent-skills, skill name
-  `vercel-react-best-practices`) — React/Next.js performance: waterfalls, bundle
-  size, RSC, rendering, data fetching.
+- `vercel-react-best-practices` (vercel-labs/agent-skills) — React/Next.js performance:
+  waterfalls, bundle size, RSC, rendering, data fetching.
 - `web-design-guidelines` (vercel-labs/agent-skills) — 100+ checks for
   accessibility, forms, focus, typography, images, UX, performance.
 - `modern-web-guidance` (GoogleChrome/modern-web-guidance) — current HTML, CSS,
   Web APIs, browser compatibility, performance (from the Chrome team).
 - `playwright-cli` (microsoft/playwright-cli) — browser QA: screenshots,
   responsive checks, interactions, console and DOM inspection.
+- `karpathy-guidelines` — surgical code changes, explicit assumptions, and verifiable success
+  criteria without unnecessary complexity.
+
+<!-- inside-product-harness:start -->
+## Inside product harness
+
+This repository uses the versioned Sachkov Inside product harness.
+
+- Shared skills installed in `.agents/skills/` are managed distribution artifacts. Change their
+  canonical source in the Workspace harness, then run the explicit update command.
+- Repository-specific instructions and skills remain owned by this repository. Give local skills
+  unique names; do not shadow a managed skill.
+- Invoke skills only when their descriptions match the task. Installing the suite does not make
+  every workflow mandatory for every request.
+- Keep this repository autonomous: build, test, run, and deploy must not depend on the Workspace
+  repository or on machine-local paths.
+- Do not edit `.inside-harness/` manually. Use the Workspace lifecycle commands and review the Git
+  diff they produce.
+<!-- inside-product-harness:end -->
