@@ -1,7 +1,7 @@
 # inside-landing
 
 Landing for **Sachkov Inside** — Kirill Sachkov's authorial engineering membership.
-Repository: https://github.com/KirillSachkov/inside-landing
+Repository: https://github.com/sachkov-inside/inside-landing
 
 All agent-facing documents in this repo (skills, READMEs, templates) are written in
 English. User-submitted content (verbatim comments, future landing copy) keeps its
@@ -9,8 +9,7 @@ original language.
 
 ## Structure
 
-- `product/` — product description for landing work (digest of the master brief;
-  source of truth: `/Users/dev/Work/sachkov-inside/product/README.md`).
+- `product/` — repository-owned product contract for Landing work.
 - `visual/` — working document of the visual direction: mood, palette, typography,
   graphics, composition, motion. Filled iteratively; decisions land here only when
   the user confirms them.
@@ -27,6 +26,44 @@ Work follows the pipeline in `playbook/README.md`: product contract → copy →
 `DESIGN.md` → implementation → browser QA → bounded review. Each layer builds
 on the confirmed previous one; product and visual decisions need owner
 confirmation before the next layer starts.
+
+Every PR starts from a Landing issue. Repository-level tracker, triage and domain conventions live
+in `docs/agents/`; the cross-repository issue/branch/PR lifecycle is named Developer Pipeline in
+the Workspace, but this repository remains runnable without a Workspace checkout.
+
+Create branches from current `main` as `<type>/<issue>-<slug>`. Keep one primary issue, one branch
+and one PR per meaningful change. PRs use squash merge and require explicit owner GO; readiness for
+review is never merge permission.
+
+## Commands
+
+Run from the repository root:
+
+```bash
+npm ci --prefix app
+npm run dev --prefix app
+npm run build --prefix app
+npm run verify --prefix app
+```
+
+`npm run verify --prefix app` is the full CI-equivalent check; there is no separate test script.
+Deploy has no local command: Timeweb deploys `main` through its GitHub integration. Use the
+production smoke commands in `README.md` after deployment.
+
+## UI Definition of Done
+
+A UI change is ready for owner review when:
+
+- `npm run verify --prefix app` passes;
+- the changed flow is checked around 393px first, then desktop and intermediate widths;
+- keyboard navigation, focus visibility, readable contrast and reduced-motion behavior remain
+  usable where relevant;
+- browser QA finds no broken layout, interaction failure or unexpected console error;
+- the PR includes representative mobile and desktop evidence and lists anything not tested.
+
+For tracker operations and readiness roles read `docs/agents/issue-tracker.md` and
+`docs/agents/triage-labels.md`. For product vocabulary and ADR boundaries read
+`docs/agents/domain.md`.
 
 ## Landing development rules
 
