@@ -77,7 +77,7 @@ not dark hacker neon, not AI-slop stock gradients.
 
 - Scroll reveal (fade + 12px rise, staggered per container, once) via
   IntersectionObserver.
-- Hero: glitch on «Software Engineer» (7s cycle, RGB-split flashes) + gentle
+- Hero: glitch on «Fullstack» (7s cycle, RGB-split flashes) + gentle
   float/jitter on the clay computer.
 - Tiles: float animation + orange glow + hover lift.
 - Terminal: lines appear one by one when in view (once), blinking cursor.
@@ -113,3 +113,4 @@ Hero → Что внутри (dark bento, 6 clay tiles) → От проекти�
 | 2026-08-18 | Conversion settled: all CTA → Tribute page, price off-site | owner provided link |
 | 2026-08-18 | Final CTA panel (robot, «Заходи в Sachkov Inside») + real footer + meta/OG/favicon | closing the design phase |
 | 2026-08-18 | Trust line removed from final CTA; Tribute link → /s/13EA; stack chips made solid/legible on light bg | owner polish pass |
+| 2026-08-20 | Hero headline changed to «Fullstack-мастерская» | owner Agentation feedback |

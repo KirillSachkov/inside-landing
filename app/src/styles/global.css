@@ -381,12 +381,9 @@
 
   h1.hero-title {
     font-weight: 700;
-    font-size: clamp(30px, 8.4vw, 60px);
-    line-height: 1.08;
+    font-size: clamp(42px, 7.2vw, 72px);
+    line-height: 1;
     letter-spacing: -0.03em;
-  }
-  @media (min-width: 700px) {
-    h1.hero-title { font-size: clamp(30px, 4.4vw, 52px); }
   }
   .hero-title .h1-line { display: block; white-space: nowrap; }
 
