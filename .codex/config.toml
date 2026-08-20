@@ -1,0 +1,4 @@
+[mcp_servers.agentation]
+command = "npm"
+args = ["exec", "--prefix", "app", "--", "agentation-mcp", "server"]
+startup_timeout_sec = 20
