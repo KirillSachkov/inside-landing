@@ -4,7 +4,7 @@
 
 ## Related issue
 
-Closes #
+<!-- Use "Closes #<issue>" for tracked work. Use "N/A — trivial docs/chore" otherwise. -->
 
 ## Verification
 
